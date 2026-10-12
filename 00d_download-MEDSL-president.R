@@ -3,13 +3,8 @@ library(tidyverse)
 library(tidylog)
 
 # Dataverse
-pres_raw <- get_dataframe_by_name(
-  file = "1976-2020-president.tab",
-  dataset = "10.7910/DVN/42MVDX",
-  original = TRUE,
-  server = "dataverse.harvard.edu",
-  version = "8",
-  .f = read_csv)
+# 1976-2020-president.tab, v8; get_dataframe_by_name() no longer resolves this file
+pres_raw <- read_csv("https://dataverse.harvard.edu/api/access/datafile/10244938?format=original")
 
 # 2024
 pres_24_init <- read_csv("https://raw.githubusercontent.com/MEDSL/2024-elections-official/refs/heads/main/2024-president-state.csv") |>
@@ -30,7 +25,7 @@ pres_24 <- pres_24_init |>
 # Recode party, variable names, etc..
 pres_fmt <- pres_raw |>
   bind_rows(pres_24) |>
-  dplyr::filter(year >= 2006) |>
+  dplyr::filter(year >= 1990) |>
   dplyr::transmute(
     year,
     state = state_po,
@@ -94,4 +89,4 @@ pres_sel <- pres_fmt2 |>
 xtabs(~ year + party, pres_sel)
 
 # write to intermediate
-write_csv(pres_sel, "data/intermediate/2008-2024_pres.csv")
+write_csv(pres_sel, "data/intermediate/1992-2024_pres.csv")

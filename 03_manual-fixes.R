@@ -7,8 +7,7 @@ add_rows_if_new <- function(data, additions, by = c("state", "year", "office", "
 }
 
 # Data --
-jsdat_raw <- readRDS("data/intermediate/prelim/candidates_party-recoded.rds") |>
-  filter(year >= 2006)
+jsdat_raw <- readRDS("data/intermediate/prelim/candidates_party-recoded.rds")
 
 # Rename variables to match expected names (if needed)
 if ("candidatevotes" %in% names(jsdat_raw)) {
@@ -536,6 +535,6 @@ stopifnot(
 )
 
 
-write_rds(jsdat, "data/intermediate/candidates_2006-2024-v1.rds")
+write_rds(jsdat, "data/intermediate/candidates_1990-2024-v1.rds")
 
 

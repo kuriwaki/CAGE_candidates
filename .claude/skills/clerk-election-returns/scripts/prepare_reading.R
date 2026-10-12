@@ -17,8 +17,8 @@ DPI <- 160
 
 skill_dir <- path(".claude", "skills", "clerk-election-returns")
 pdf_path <- path("data", "clerk", str_glue("{YEAR}election.pdf"))
-# the most recent release build, e.g. data/intermediate/candidates_2006-2024.rds
-history_path <- dir_ls(path("data", "intermediate"), regexp = "candidates_2006-\\d{4}\\.rds$") |>
+# the most recent release build, e.g. data/intermediate/candidates_1990-2024.rds
+history_path <- dir_ls(path("data", "intermediate"), regexp = "candidates_\\d{4}-\\d{4}\\.rds$") |>
   sort() |>
   tail(1)
 work_dir <- path("data", "clerk", "claude_read", YEAR)

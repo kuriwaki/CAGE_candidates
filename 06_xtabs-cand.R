@@ -8,7 +8,7 @@ library(tidyverse)
 source("00b_xtabs-functions.R")
 
 # data ---
-jsdat <- read_dta("release/candidates_2006-2024.dta") |>
+jsdat <- read_dta("release/candidates_1990-2024.dta") |>
   mutate(won_by_type = str_c(type, won, sep = "-"),
          wonparty_by_type = str_c(type, won, sep = "-"))
 

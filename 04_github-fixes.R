@@ -6,7 +6,7 @@ add_rows_if_new <- function(data, additions, by = c("state", "year", "office", "
   bind_rows(data, anti_join(additions, data, by = by))
 }
 
-jsdat <- readRDS("data/intermediate/candidates_2006-2024-v1.rds")
+jsdat <- readRDS("data/intermediate/candidates_1990-2024-v1.rds")
 
 # GITHUB ISSUES =====
 
@@ -178,4 +178,4 @@ cand <- cand |>
 
 ## Write the dataset ----
 
-write_rds(cand, "data/intermediate/candidates_2006-2024.rds")
+write_rds(cand, "data/intermediate/candidates_1990-2024-v2.rds")

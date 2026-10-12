@@ -91,3 +91,5 @@ acs-*.bib
 *.pre
 *.snm
 *.vrb
+# Claude Code skills (local only)
+.claude/
