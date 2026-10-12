@@ -1,16 +1,19 @@
 ---
 name: clerk-election-returns
-description: Build candidate-level U.S. House and Senate rows for a new election year (e.g. 2026) from the Clerk of the House "Statistics of the Congressional Election" PDF at history.house.gov. Claude reads the page images and codes party and name_snyder, the rows are checked for consistency, and the run produces a CAGE skeleton plus discrepancy and hand-entry lists. Use when adding a new election year to cces_candidates; the steps are in TASK.md.
+description: Fill a new election year's official U.S. House and Senate results (candidatevotes, totalvotes, won) from the Clerk of the House "Statistics of the Congressional Election" PDF at history.house.gov, into the CAGE roster kept in the project's Google Sheet (names, party, incumbency already coded). Claude reads the page images and transcribes ballot lines; R matches them to the roster and flags everything it cannot fill. Use when the Clerk volume for a new year (e.g. 2026) is out; the steps are in TASK.md.
 ---
 
-# Clerk of the House election returns → CAGE
+# Clerk of the House election returns → CAGE roster
 
 The Clerk of the House publishes one PDF per election cycle at
 <https://history.house.gov/Institution/Election-Statistics/>. It is the
-authoritative source for `candidatevotes`, `party_formal`, and the candidate
-roster for `office` in `{H, S}`. This skill turns one of those PDFs into
-candidate-level rows for the CAGE dataset (`doi:10.7910/DVN/DGDRDT`, released
-from this repo).
+authoritative source for House and Senate `candidatevotes`. Before the election,
+the CAGE roster for the year is kept in a Google Sheet (tab `Results_<year>` of
+sheet `1otML47xPsa9Wf1A_XEISLJFHEm6wpv5D3FzRe2-xZXY`): every ballot-qualified
+House, Senate and Governor candidate with `name_snyder`, `party`,
+`party_formal`, `inc`, `type`, `dist` and `nextup` already coded, and the
+official columns (`candidatevotes`, `totalvotes`, `won`) blank. This skill fills
+those official columns for House and Senate rows from the Clerk volume.
 
 **To run it:** "Execute `.claude/skills/clerk-election-returns/TASK.md` for 2026".
 
@@ -25,152 +28,140 @@ codebook already blanks vote counts for uncontested Florida races.
 Concretely, no step may:
 
 - read a number off a chart, a percentage, or a neighbouring row;
-- carry a number over from another source (MEDSL, Ballotpedia, Wikipedia, a
-  Secretary of State page) into a cell sourced from this PDF;
+- carry a number over from another source (the sheet's live columns, MEDSL,
+  Ballotpedia, Wikipedia, a Secretary of State page) into a cell sourced from
+  this PDF;
 - infer a total by subtraction from a recapitulation row;
-- repair a flagged row from memory of the election;
-- add name information (middle names, legal first names, suffixes) that is not
-  on the page or in earlier CAGE rows.
+- repair a flagged row from memory of the election.
 
-If a figure is unreadable, leave it blank, keep the flag, and say so in the run
-report. Filling it in later from a named second source is a separate,
-documented step, never a silent one.
+The roster's names and party codes are not re-coded from the PDF. A Clerk
+candidate missing from the roster gets a proposed name built only from the
+printed name and is flagged for review.
 
 ## Pipeline
 
 | Step | Done by | Writes |
 |---|---|---|
 | 1. Fetch the volume, check the cover year | shell | `data/clerk/<year>election.pdf` |
-| 2. Prepare the reader folder | `scripts/prepare_reading.R` | `data/clerk/claude_read/<year>/`: page images, `history.tsv` (earlier years only), `party_labels.tsv`, `batches.csv` |
-| 3. Read the pages and code party and names | Claude subagents, one per 10-page batch, following `reference/reader.md` | `data/clerk/claude_read/<year>/out/pages_*.tsv` |
+| 2. Prepare the reader folder and roster | `scripts/prepare_reading.R` | `data/clerk/claude_read/<year>/`: page images, `roster.csv` (from the sheet), `reader.md`, `batches.csv` |
+| 3. Transcribe the pages | Claude subagents, one per 10-page batch, following `reference/reader.md` | `data/clerk/claude_read/<year>/out/pages_*.tsv` |
 | 4. Check the readings | `scripts/check_readings.R` | `data/clerk/claude_rows_<year>.tsv`, `data/<year>/candidates_<year>_discrepancies.csv`, `data/<year>/candidates_<year>_hand-entry.csv` |
-| 5. Build the skeleton | `scripts/build_skeleton.R` | `data/<year>/candidates_<year>_skeleton.csv` |
-| Validation (years CAGE already covers) | `scripts/validate_pipeline.R` | printed diagnostics and `data/clerk/validation/<year>/` |
+| 5. Fill the roster | `scripts/fill_roster.R` | `data/<year>/candidates_<year>_skeleton.csv` |
+| Validation (past years) | `scripts/make_test_roster.R`, then steps 2–5, then `scripts/validate_pipeline.R` | `data/<year>/roster_test.csv`, `data/clerk/validation/<year>/` |
 
-Readers check their own figures against each state's recapitulation table in
-the PDF and flag any race that does not add up.
+Readers check their own figures against each state's recapitulation table and
+flag any race that does not add up. They never see the roster.
+
+## How the roster is filled
+
+Within each race (state, office, House district, special or regular), each
+printed candidate line is matched to one roster row, in this order:
+
+1. the last word of the surname (hyphens split), when it is unique in the race;
+2. surname plus first initial or nickname initial (two candidates sharing a
+   surname);
+3. a compound surname found anywhere in the printed name;
+4. the only unmatched roster row against the only unmatched printed candidate
+   (`match = only unmatched pair in race`; check these).
+
+Then:
+
+- `candidatevotes` is the sum of all the candidate's printed party lines.
+- `totalvotes` is the sum over the race's printed candidates, and `won` marks
+  the most votes, only when every printed candidate has a figure; a lone
+  candidate with no printed count (unopposed) gets `won = 1`.
+- A roster row with no printed line is kept, blank, flagged
+  `on roster, not printed by the Clerk` (withdrew, or the Clerk omitted them).
+- A printed named candidate with 10+ votes and no roster row is added, flagged
+  `not in roster`, with `name_snyder` and `party` built from the printed line
+  (party from the first label: Democrat D, Republican R, Libertarian Lbt,
+  Green Grn, independent/no-party labels I, write-ins and everything else
+  Other) and `inc = 0`.
+- Races on the hand-entry list keep blank official columns.
+- Governor rows pass through blank (`governor: from state returns`).
+- When the sheet's `votes_live` is filled, a row whose official figure differs
+  from it by more than 10% is flagged.
 
 ## Outputs
 
+### `candidates_<year>_skeleton.csv`
+
+Every roster row plus added rows, in CAGE columns (`year state office dist type
+nextup party party_formal name_snyder inc candidatevotes totalvotes won
+runoff`) followed by provenance: `cage_row_id`, `candidate` (from the sheet),
+`name_printed`, `party_lines`, `line_votes`, `source_page`, `match`, `flags`,
+`line_flags` (the reader's flag).
+
 ### `candidates_<year>_discrepancies.csv`
 
-Rows a person should look at on the PDF page named in `page`.
-
-| `type` | Meaning |
-|---|---|
-| `unexpected code in state, office, special or kind` | a value outside the reader.md codes |
-| `party missing or not one of D, R, I, Lbt, Grn, Other` | a candidate row with no valid `party` |
-| `candidate without name_snyder` | a named candidate with no `name_snyder` |
-| `line appears more than once` | the same line transcribed twice in a race |
-| `party lines and figures do not line up` | `party_lines` and `line_votes` have different lengths |
-| `candidatevotes is not the sum of line_votes` | a candidate's total disagrees with their lines |
-| `figure missing with no flag or footnote` | a blank figure the reader did not explain |
-| `reader flag` | a reader was unsure: a possible history match, a surname split, a coding call, a race that did not add up |
+Rows a person should check on the PDF page named in `page`: unexpected codes,
+duplicated lines, party lines and figures that do not line up, candidate totals
+that are not the sum of their lines, blank figures without a flag, and every
+reader flag.
 
 ### `candidates_<year>_hand-entry.csv`
 
-Races coded by hand from Secretary of State returns, not taken from this volume.
-Rows with `scope = race` list every line of the race; the whole race is kept out
-of the skeleton.
+Races coded by hand from Secretary of State returns, not taken from this volume:
 
 | `reason` | Why |
 |---|---|
-| `special election` | printed under "For unexpired term ending …"; specials are hand-entered by convention |
-| `runoff state with no majority` | Georgia or Louisiana race where nobody cleared 50%; the deciding runoff is not in the volume |
-| `figure may not be the November first round` | a footnote or ranked-choice lines (Continuing/Exhausted Ballots) say the printed round is not the first |
-| `ballot line with no candidate name printed` (`scope = line`) | e.g. just "Green .... 57,442"; the candidate has to be identified |
+| `special election` | printed under "For unexpired term ending …"; specials are coded from state returns |
+| `runoff state with no majority` | Georgia or Louisiana race where nobody cleared 50%; CAGE keeps the deciding runoff |
+| `figure may not be the November first round` | a footnote or ranked-choice lines; CAGE keeps the final ranked-choice round |
+| `ballot line with no candidate name printed` (`scope = line`) | e.g. just "Green .... 57,442"; identify the candidate |
 
-House special elections are not printed in the volume at all, so they never
-appear here; build that list separately from the states that held them.
-
-### `candidates_<year>_skeleton.csv`
-
-CAGE columns, ready to append at `01_stack-sources.R` after review:
-`year state office dist type nextup party party_formal name_snyder inc
-candidatevotes totalvotes won runoff`, followed by provenance columns
-(`name_printed party_lines line_votes name_basis source_page flags`) that are
-dropped when appending.
-
-- Named candidates and named write-ins in regular House and Senate races;
-  hand-entry races, non-vote lines and delegates are left out.
-- `dist` is the House district, or the Senate class for Senate rows.
-- `candidatevotes` sums a candidate's own line and cross-endorsement lines.
-- `totalvotes` and `won` are filled only when every candidate in the race has a
-  figure; an unopposed candidate with no printed count gets `won = 1`.
-- `inc` is left empty for hand coding.
-- `name_basis` says whether `name_snyder` was copied from an earlier CAGE row
-  (`history: …`) or built from the printed name (`reformatted`). Treat
-  reformatted names as proposals: CAGE often carries fuller legal names that
-  are not printed in the volume.
-
-### Validation diagnostics
-
-`validate_pipeline.R <year>` compares the skeleton and hand-entry list with the
-released CAGE rows for that year. It prints a summary table (counts, party,
-names, votes, other columns) followed by every difference: rows found on only
-one side, races missing or misrouted, party, `name_snyder`, vote, `totalvotes`,
-`won`, `dist` and `nextup` differences. The same results are written to
-`data/clerk/validation/<year>/summary.csv`, `candidates.csv` and
-`cage_scope.csv`.
+House special elections held on other dates are not printed in the volume at
+all.
 
 ## Scope
 
-**In scope.** U.S. Representative, Delegate, Resident Commissioner, and U.S.
-Senator races held on the November general election date, exactly as printed:
-the candidate's name and party as the Clerk prints them, every cross-endorsed
-party line, and the vote total.
+**In scope:** House, Delegate and Senate races held on the November general
+election date, as printed. Delegates and DC are dropped (CAGE excludes them).
 
-**Not in scope, because it is not in the PDF:**
-
-| Needed for CAGE | Where it actually comes from |
-|---|---|
-| **All special elections**: House specials are absent from the volume entirely, and Senate specials, though printed, are hand-entered by convention | State Secretary of State returns; see `links/sec-state_statement-of-votes.csv` |
-| **Runoff results** (Georgia, Louisiana): the volume holds the first round, and the runoff is the round CAGE keeps | State Secretary of State returns |
-| Governor races | State Secretary of State returns (cf. `data/2024/2024-governor-raw.csv`) |
-| President by candidate name | MEDSL (`00d_download-MEDSL-president.R`); the Clerk prints presidential electors by *party*, not by candidate |
-| `inc` | Prior CAGE rows plus intervening special elections |
-
-The volume appears roughly four months after the election (the 2024 edition
-was published 10 March 2025), so a 2026 run before about March 2027 will fail
-the cover-year check.
+**Not in scope, coded by hand:** special elections, runoff rounds (GA, LA, MS
+specials), ranked-choice final rounds (AK, ME), Governor (state returns),
+President (MEDSL).
 
 ## After the run
 
 1. Work the discrepancies file against the PDF pages.
-2. Hand-enter the races on the hand-entry list, and add House specials.
-3. Review reformatted names, especially race winners.
-4. Code `inc`.
-5. Append the skeleton at `01_stack-sources.R` and run `02_party-recode.R` onward.
+2. Review rows matched only by elimination, rows added `not in roster`, and
+   roster rows not printed.
+3. Code the hand-entry races from Secretary of State returns.
+4. Append the skeleton at `01_stack-sources.R` (dropping the provenance columns)
+   and run the pipeline through `07_checks.R`.
 
-Keep `claude_rows_<year>.tsv`, the readers' `out/` files and the three
-`data/<year>/` files: together they are the provenance for every figure.
+Keep `claude_rows_<year>.tsv`, the readers' `out/` files and the `data/<year>/`
+files: together they are the provenance for every figure.
 
 ## Files
 
 - `TASK.md`: the step-by-step task Claude executes for a year.
-- `reference/reader.md`: transcription and coding rules for the readers.
+- `reference/reader.md`: transcription rules for the readers.
 - `scripts/prepare_reading.R`, `scripts/check_readings.R`,
-  `scripts/build_skeleton.R`: steps 2, 4 and 5.
-- `scripts/validate_pipeline.R`: diagnostics against CAGE for a year it covers.
+  `scripts/fill_roster.R`: steps 2, 4 and 5.
+- `scripts/make_test_roster.R`, `scripts/validate_pipeline.R`: end-to-end test
+  on a year CAGE already covers.
 
 ## Validation status
 
-2024, run end to end with this TASK.md: readers saw only page images, CAGE rows
-from before 2024 and the party labels. Compared with CAGE v4.1:
+End-to-end runs on 2024 and 2022 (October 2026), with test rosters built from
+the audited CAGE data (named write-ins removed) and the readers seeing only the
+page images:
 
-| | Result |
-|---|---|
-| Scored CAGE rows found in the skeleton | 1,266 of 1,268 (99.8%) |
-| `candidatevotes` identical | 1,264 of 1,264 |
-| `won` identical | 1,266 of 1,266 |
-| `party` identical | 98.8%; D and R 913 of 913, no Democrat and Republican swapped |
-| `party_formal` identical | 95.1% |
-| `name_snyder` identical | 97.0% |
-| Returning candidates linked to their CAGE record | 643 of 649 (99.1%) |
+| | 2024 | 2022 |
+|---|---|---|
+| Ballot lines read | 1,518 | 1,524 |
+| Roster rows matched to a Clerk line, with `candidatevotes` identical to CAGE | 1,173 of 1,173 | 1,168 of 1,168 |
+| Roster rows left blank: House specials not in the volume | 21 | 22 |
+| Rows in hand-entry races (runoffs, ranked-choice rounds) | 10 | 20 |
+| Clerk candidates added (`not in roster`) | 65 | 78 |
+| … of which CAGE has under the same name | 58 | 70 |
 
-Almost every remaining difference is a CAGE convention or inconsistency: named
-write-ins CAGE drops in one race and keeps in others, Nevada's "None of these
-candidates", a duplicate row, no-party labels coded `I` in some states and
-`Other` in others, fuller legal names added outside the volume, and Senate
-class 2 on the 2024 Maine and Vermont rows. The 9 readers took about 7 minutes
-in parallel and about 1.1 million tokens.
+With the House specials set aside, `totalvotes` and `won` now match CAGE in
+every race. The runs led to fixes in `04b_audit-corrections.R`: CAGE's
+sub-10-vote write-ins were dropped (the guide excludes them), four 2024 Ohio
+Senate write-ins the Clerk prints were added, and a duplicate 2022 Idaho Senate
+row was removed. The remaining differences are added candidates whose name is
+formatted differently from CAGE's (always flagged) and the Idaho
+Constitution/Libertarian candidate, whose test roster predates the name merge.

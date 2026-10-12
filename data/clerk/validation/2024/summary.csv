@@ -1,0 +1,12 @@
+metric,value
+House/Senate skeleton rows,1269
+rows in hand-entry races (left blank),10
+roster rows matched to a Clerk line,1173 / 1194 (98.2%)
+roster rows not printed by the Clerk,0
+candidatevotes identical to CAGE,1172 / 1194 (98.2%)
+totalvotes identical to CAGE,1172 / 1194 (98.2%)
+won identical to CAGE,1172 / 1194 (98.2%)
+rows added from the Clerk (not in roster),65
+  added rows CAGE has under the same name,62
+  added rows CAGE has under another name,3
+  added rows not in CAGE,0

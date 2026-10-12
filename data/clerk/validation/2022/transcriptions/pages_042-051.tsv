@@ -1,0 +1,322 @@
+year	page	state	office	dist	special	kind	name_printed	party_lines	line_votes	candidatevotes	footnote	flags
+2022	42	OK	H	1	0	candidate	Kevin Hern	Republican	142800	142800		
+2022	42	OK	H	1	0	candidate	Adam Martin	Democrat	80974	80974		
+2022	42	OK	H	1	0	candidate	Evelyn L. Rogers	Independent	9721	9721		
+2022	42	OK	H	2	0	candidate	Josh Brecheen	Republican	167843	167843		
+2022	42	OK	H	2	0	candidate	Naomi Andrews	Democrat	54194	54194		
+2022	42	OK	H	2	0	candidate	Bulldog Ben Robinson	Independent	9635	9635		
+2022	42	OK	H	3	0	candidate	Frank D. Lucas	Republican	147418	147418		
+2022	42	OK	H	3	0	candidate	Jeremiah A. Ross	Democrat	50354	50354		
+2022	42	OK	H	4	0	candidate	Tom Cole	Republican	149879	149879		
+2022	42	OK	H	4	0	candidate	Mary Brannon	Democrat	74667	74667		
+2022	42	OK	H	5	0	candidate	Stephanie I. Bice	Republican	152699	152699		
+2022	42	OK	H	5	0	candidate	Joshua Harris-Till	Democrat	96799	96799		
+2022	42	OK	H	5	0	candidate	David K. Frosch	Independent	9328	9328		
+2022	42	OR	S		0	candidate	Jo Rae Perkins	Republican	788991	788991		
+2022	42	OR	S		0	candidate	Ron Wyden	Democrat	1076424	1076424		
+2022	42	OR	S		0	candidate	Chris Henry	Progressive	36883	36883		
+2022	42	OR	S		0	candidate	Dan Pulju	Pacific Green	23454	23454		
+2022	42	OR	S		0	nonvote		Miscellaneous	2197	2197		
+2022	42	OR	H	1	0	candidate	Christopher A. Mann	Republican	99042	99042		
+2022	42	OR	H	1	0	candidate	Suzanne Bonamici	Democrat	210682	210682		
+2022	42	OR	H	1	0	nonvote		Miscellaneous	519	519		
+2022	42	OR	H	2	0	candidate	Cliff Bentz	Republican	208369	208369		
+2022	42	OR	H	2	0	candidate	Joe Yetter	Democrat	99882	99882		
+2022	42	OR	H	2	0	nonvote		Miscellaneous	425	425		
+2022	42	OR	H	3	0	candidate	Joanna Harbour	Republican	79766	79766		
+2022	42	OR	H	3	0	candidate	Earl Blumenauer	Democrat	212119	212119		
+2022	42	OR	H	3	0	candidate	David E. Delk	Progressive	10982	10982		
+2022	42	OR	H	3	0	nonvote		Miscellaneous	467	467		
+2022	42	OR	H	4	0	candidate	Alek Skarlatos	Republican	146055	146055		
+2022	42	OR	H	4	0	candidate	Val Hoyle	Democrat	171372	171372		
+2022	42	OR	H	4	0	candidate	Levi Leatherberry	Independent	9052	9052		
+2022	42	OR	H	4	0	candidate	Jim Howard	Constitution	6075	6075		
+2022	42	OR	H	4	0	candidate	Mike Beilstein	Pacific Green	6033	6033		
+2022	42	OR	H	4	0	nonvote		Miscellaneous	490	490		
+2022	42	OR	H	5	0	candidate	Lori Chavez-DeRemer	Republican	178813	178813		
+2022	42	OR	H	5	0	candidate	Jamie McLeod-Skinner	Democrat	171514	171514		
+2022	42	OR	H	5	0	nonvote		Miscellaneous	906	906		
+2022	43	OR	H	6	0	candidate	Mike Erickson	Republican	139946	139946		
+2022	43	OR	H	6	0	candidate	Andrea Salinas	Democrat	147156	147156		
+2022	43	OR	H	6	0	candidate	Larry D. McFarland	Constitution	6762	6762		
+2022	43	OR	H	6	0	nonvote		Miscellaneous	513	513		
+2022	43	PA	S		0	candidate	Mehmet Oz	Republican	2487260	2487260		
+2022	43	PA	S		0	candidate	John Fetterman	Democrat	2751012	2751012		
+2022	43	PA	S		0	candidate	Erik Gerhardt	Libertarian	72887	72887		
+2022	43	PA	S		0	candidate	Richard L. Weiss	Green	30434	30434		
+2022	43	PA	S		0	candidate	Daniel Wassmer	Keystone Party	26428	26428		
+2022	43	PA	H	1	0	candidate	Brian K. Fitzpatrick	Republican	201571	201571		
+2022	43	PA	H	1	0	candidate	Ashley Ehasz	Democrat	165809	165809		
+2022	43	PA	H	2	0	candidate	Aaron Bashir	Republican	45454	45454		
+2022	43	PA	H	2	0	candidate	Brendan F. Boyle	Democrat	141229	141229		
+2022	43	PA	H	3	0	candidate	Dwight Evans	Democrat	251115	251115		
+2022	43	PA	H	3	0	candidate	Christopher Hoeppner	Socialist Workers	12820	12820		
+2022	43	PA	H	4	0	candidate	Christian Nascimento	Republican	141986	141986		
+2022	43	PA	H	4	0	candidate	Madeleine Dean	Democrat	224799	224799		
+2022	43	PA	H	5	0	candidate	David Galluch	Republican	110058	110058		
+2022	43	PA	H	5	0	candidate	Mary Gay Scanlon	Democrat	205128	205128		
+2022	43	PA	H	6	0	candidate	Guy Ciarrocchi	Republican	136097	136097		
+2022	43	PA	H	6	0	candidate	Chrissy Houlahan	Democrat	190386	190386		
+2022	43	PA	H	7	0	candidate	Lisa Scheller	Republican	145527	145527		
+2022	43	PA	H	7	0	candidate	Susan Wild	Democrat	151364	151364		
+2022	43	PA	H	8	0	candidate	Jim Bognet	Republican	139930	139930		
+2022	43	PA	H	8	0	candidate	Matt Cartwright	Democrat	146956	146956		
+2022	43	PA	H	9	0	candidate	Daniel Meuser	Republican	209185	209185		
+2022	43	PA	H	9	0	candidate	Amanda R. Waldman	Democrat	92622	92622		
+2022	43	PA	H	10	0	candidate	Scott Perry	Republican	169331	169331		
+2022	43	PA	H	10	0	candidate	Shamaine Daniels	Democrat	145215	145215		
+2022	43	PA	H	11	0	candidate	Lloyd Smucker	Republican	194991	194991		
+2022	43	PA	H	11	0	candidate	Bob Hollister	Democrat	121835	121835		
+2022	43	PA	H	12	0	candidate	Mike Doyle	Republican	143946	143946		
+2022	43	PA	H	12	0	candidate	Summer Lee	Democrat	184674	184674		
+2022	44	PA	H	13	0	candidate	John Joyce	Republican	260345	260345		
+2022	44	PA	H	14	0	candidate	Guy Reschenthaler	Republican	230865	230865		
+2022	44	PA	H	15	0	candidate	Glenn Thompson	Republican	213417	213417		
+2022	44	PA	H	15	0	candidate	Mike Molesevich	Democrat	91729	91729		
+2022	44	PA	H	16	0	candidate	Mike Kelly	Republican	190546	190546		
+2022	44	PA	H	16	0	candidate	Dan Pastore	Democrat	130443	130443		
+2022	44	PA	H	17	0	candidate	Jeremy Shaffer	Republican	169013	169013		
+2022	44	PA	H	17	0	candidate	Chris Deluzio	Democrat	193615	193615		
+2022	44	RI	H	1	0	candidate	Allen R. Waters	Republican	56055	56055		
+2022	44	RI	H	1	0	candidate	David N. Cicilline	Democrat	100318	100318		
+2022	44	RI	H	1	0	nonvote		Write-in	361	361		
+2022	44	RI	H	2	0	candidate	Allan W. Fung	Republican	93969	93969		
+2022	44	RI	H	2	0	candidate	Seth M. Magaziner	Democrat	101432	101432		
+2022	44	RI	H	2	0	candidate	William H. Gilbert	Independent-Moderate	5489	5489		
+2022	44	RI	H	2	0	nonvote		Write-in	199	199		
+2022	44	SC	S		0	candidate	Tim Scott	Republican	1066274	1066274		
+2022	44	SC	S		0	candidate	Krystle Matthews	Democrat	627616	627616		
+2022	44	SC	S		0	nonvote		Write-in	1812	1812		
+2022	45	SC	H	1	0	candidate	Nancy Mace	Republican	153757	153757		
+2022	45	SC	H	1	0	candidate	Annie Andrews	Democrat	115796	115796		
+2022	45	SC	H	1	0	candidate	Joseph Oddo	Alliance	2634	2634		
+2022	45	SC	H	1	0	nonvote		Write-in	494	494		
+2022	45	SC	H	2	0	candidate	Joe Wilson	Republican	147699	147699		
+2022	45	SC	H	2	0	candidate	Judd Larkins	Democrat	98081	98081		
+2022	45	SC	H	2	0	nonvote		Write-in	346	346		
+2022	45	SC	H	3	0	candidate	Jeff Duncan	Republican	189971	189971		
+2022	45	SC	H	3	0	nonvote		Write-in	4598	4598		
+2022	45	SC	H	4	0	candidate	William R. Timmons IV	Republican	165607	165607		
+2022	45	SC	H	4	0	nonvote		Write-in	16758	16758		
+2022	45	SC	H	5	0	candidate	Ralph Norman	Republican	154725	154725		
+2022	45	SC	H	5	0	candidate	Evangeline Hundley	Democrat	83299	83299		
+2022	45	SC	H	5	0	candidate	Larry Gaither	Green	3547	3547		
+2022	45	SC	H	5	0	nonvote		Write-in	136	136		
+2022	45	SC	H	6	0	candidate	Duke Buckner	Republican	79879	79879		
+2022	45	SC	H	6	0	candidate	James E. Clyburn	Democrat	130923	130923		
+2022	45	SC	H	6	0	nonvote		Write-in	226	226		
+2022	45	SC	H	7	0	candidate	Russell Fry	Republican	164440	164440		
+2022	45	SC	H	7	0	candidate	Daryl W. Scott	Democrat	89030	89030		
+2022	45	SC	H	7	0	nonvote		Write-in	395	395		
+2022	45	SD	S		0	candidate	John Thune	Republican	242316	242316		
+2022	45	SD	S		0	candidate	Brian L. Bengs	Democrat	91007	91007		
+2022	45	SD	S		0	candidate	Tamara J. Lesnar	Libertarian	14697	14697		
+2022	45	SD	H	1	0	candidate	Dusty Johnson	Republican	253821	253821		
+2022	45	SD	H	1	0	candidate	Collin Duprel	Libertarian	74020	74020		
+2022	46	TN	H	1	0	candidate	Diana Harshbarger	Republican	147241	147241		
+2022	46	TN	H	1	0	candidate	Cameron Parsons	Democrat	37049	37049		
+2022	46	TN	H	1	0	candidate	Richard G. Baker	Independent	2466	2466		
+2022	46	TN	H	1	0	candidate	Matt Makrom	Independent	1247	1247		
+2022	46	TN	H	2	0	candidate	Tim Burchett	Republican	141089	141089		
+2022	46	TN	H	2	0	candidate	Mark Harmon	Democrat	66673	66673		
+2022	46	TN	H	3	0	candidate	Charles J. “Chuck” Fleischmann	Republican	136639	136639		
+2022	46	TN	H	3	0	candidate	Meg Gorman	Democrat	60334	60334		
+2022	46	TN	H	3	0	candidate	Rick Tyler	Independent	1736	1736		
+2022	46	TN	H	3	0	candidate	Thomas M. Rumba	Independent	1121	1121		
+2022	46	TN	H	4	0	candidate	Scott DesJarlais	Republican	122401	122401		
+2022	46	TN	H	4	0	candidate	Wayne Steele	Democrat	44648	44648		
+2022	46	TN	H	4	0	candidate	Mike Winton	Independent	2834	2834		
+2022	46	TN	H	4	0	candidate	Clyde Benson	Independent	1806	1806		
+2022	46	TN	H	4	0	candidate	David Leighton Jones	Independent	708	708		
+2022	46	TN	H	4	0	candidate	Tharon Chandler	Independent	585	585		
+2022	46	TN	H	4	0	candidate	Joseph “Krishnadas” Magyer	Independent	455	455		
+2022	46	TN	H	5	0	candidate	Andy Ogles	Republican	123558	123558		
+2022	46	TN	H	5	0	candidate	Heidi Campbell	Democrat	93648	93648		
+2022	46	TN	H	5	0	candidate	Derrick Brantley	Independent	2090	2090		
+2022	46	TN	H	5	0	candidate	Daniel Cooper	Independent	1132	1132		
+2022	46	TN	H	5	0	candidate	Rick Shannon	Independent	847	847		
+2022	46	TN	H	6	0	candidate	John W. Rose	Republican	129388	129388		
+2022	46	TN	H	6	0	candidate	Randal Cooper	Democrat	65675	65675		
+2022	46	TN	H	7	0	candidate	Mark E. Green	Republican	108421	108421		
+2022	46	TN	H	7	0	candidate	Odessa Kelly	Democrat	68973	68973		
+2022	46	TN	H	7	0	candidate	Steven J. Hooper	Independent	3428	3428		
+2022	46	TN	H	8	0	candidate	David Kustoff	Republican	155602	155602		
+2022	46	TN	H	8	0	candidate	Lynnette P. Williams	Democrat	51102	51102		
+2022	46	TN	H	8	0	candidate	James Hart	Independent	2541	2541		
+2022	46	TN	H	8	0	candidate	Ronnie Henley	Independent	1070	1070		
+2022	46	TN	H	9	0	candidate	Charlotte Bergmann	Republican	35123	35123		
+2022	46	TN	H	9	0	candidate	Steve Cohen	Democrat	93800	93800		
+2022	46	TN	H	9	0	candidate	George Flinn	Independent	3349	3349		
+2022	46	TN	H	9	0	candidate	Dennis Clark	Independent	1160	1160		
+2022	46	TN	H	9	0	candidate	Paul Cook	Independent	485	485		
+2022	46	TN	H	9	0	writein	Bobby Lyons	Write-in	1	1		
+2022	47	TX	H	1	0	candidate	Nathaniel Moran	Republican	183224	183224		
+2022	47	TX	H	1	0	candidate	Jrmar “JJ” Jefferson	Democrat	51438	51438		
+2022	47	TX	H	2	0	candidate	Dan Crenshaw	Republican	151791	151791		
+2022	47	TX	H	2	0	candidate	Robin Fulford	Democrat	78496	78496		
+2022	47	TX	H	3	0	candidate	Keith Self	Republican	164240	164240		
+2022	47	TX	H	3	0	candidate	Sandeep Srivastava	Democrat	100121	100121		
+2022	47	TX	H	3	0	candidate	Christopher Claytor	Libertarian	6895	6895		
+2022	47	TX	H	4	0	candidate	Pat Fallon	Republican	170781	170781		
+2022	47	TX	H	4	0	candidate	Iro Omere	Democrat	79179	79179		
+2022	47	TX	H	4	0	candidate	John Simmons	Libertarian	6049	6049		
+2022	47	TX	H	5	0	candidate	Lance Gooden	Republican	135595	135595		
+2022	47	TX	H	5	0	candidate	Tartisha Hill	Democrat	71930	71930		
+2022	47	TX	H	5	0	candidate	Kevin A. Hale	Libertarian	4293	4293		
+2022	47	TX	H	5	0	writein	Ruth Torres	Write-in	147	147		
+2022	47	TX	H	6	0	candidate	Jake Ellzey	Republican	149321	149321		
+2022	47	TX	H	7	0	candidate	Johnny Teague	Republican	65835	65835		
+2022	47	TX	H	7	0	candidate	Lizzie Fletcher	Democrat	115994	115994		
+2022	47	TX	H	8	0	candidate	Morgan Luttrell	Republican	153127	153127		
+2022	47	TX	H	8	0	candidate	Laura Jones	Democrat	68715	68715		
+2022	47	TX	H	8	0	candidate	Roy Eriksen	Libertarian	3126	3126		
+2022	47	TX	H	9	0	candidate	Jimmy I. Leon	Republican	38161	38161		
+2022	47	TX	H	9	0	candidate	Al Green	Democrat	125446	125446		
+2022	47	TX	H	10	0	candidate	Michael T. McCaul	Republican	159469	159469		
+2022	47	TX	H	10	0	candidate	Linda Nuno	Democrat	86404	86404		
+2022	47	TX	H	10	0	candidate	Bill Kelsey	Libertarian	6064	6064		
+2022	47	TX	H	11	0	candidate	August Pfluger	Republican	151066	151066		
+2022	47	TX	H	12	0	candidate	Kay Granger	Republican	152953	152953		
+2022	47	TX	H	12	0	candidate	Trey J. Hunt	Democrat	85026	85026		
+2022	47	TX	H	13	0	candidate	Ronny Jackson	Republican	161767	161767		
+2022	47	TX	H	13	0	candidate	Kathleen Brown	Democrat	52910	52910		
+2022	47	TX	H	14	0	candidate	Randy K. Weber, Sr.	Republican	149543	149543		
+2022	47	TX	H	14	0	candidate	Mikal Williams	Democrat	63606	63606		
+2022	47	TX	H	15	0	candidate	Monica De La Cruz	Republican	80978	80978		
+2022	47	TX	H	15	0	candidate	Michelle Vallejo	Democrat	68097	68097		
+2022	47	TX	H	15	0	candidate	Ross Lynn Leone, Jr.	Libertarian	2814	2814		
+2022	47	TX	H	16	0	candidate	Irene Armendariz Jackson	Republican	54986	54986		
+2022	47	TX	H	16	0	candidate	Veronica Escobar	Democrat	95510	95510		
+2022	47	TX	H	17	0	candidate	Pete Sessions	Republican	144408	144408		
+2022	47	TX	H	17	0	candidate	Mary Jo Woods	Democrat	72801	72801		
+2022	47	TX	H	18	0	candidate	Carmen Maria Montiel	Republican	40941	40941		
+2022	47	TX	H	18	0	candidate	Sheila Jackson Lee	Democrat	110511	110511		
+2022	47	TX	H	18	0	candidate	Vince Duncan	Independent	2766	2766		
+2022	47	TX	H	18	0	candidate	Phil Kurtz	Libertarian	2050	2050		
+2022	47	TX	H	19	0	candidate	Jodey C. Arrington	Republican	152321	152321		
+2022	47	TX	H	19	0	candidate	Nathan Lewis	Independent	37360	37360		
+2022	48	TX	H	20	0	candidate	Kyle Sinclair	Republican	53226	53226		
+2022	48	TX	H	20	0	candidate	Joaquin Castro	Democrat	115352	115352		
+2022	48	TX	H	20	0	writein	Adam Jonasz	Write-in	21	21		
+2022	48	TX	H	21	0	candidate	Chip Roy	Republican	207426	207426		
+2022	48	TX	H	21	0	candidate	Claudia Andreana Zapata	Democrat	122655	122655		
+2022	48	TX	H	22	0	candidate	Troy E. Nehls	Republican	150014	150014		
+2022	48	TX	H	22	0	candidate	Jamie Kaye Jordan	Democrat	85653	85653		
+2022	48	TX	H	22	0	candidate	Joseph LeBlanc	Libertarian	5378	5378		
+2022	48	TX	H	22	0	writein	Jim Squires	Write-in	170	170		
+2022	48	TX	H	23	0	candidate	Tony Gonzales	Republican	116649	116649		
+2022	48	TX	H	23	0	candidate	John Lira	Democrat	80947	80947		
+2022	48	TX	H	23	0	candidate	Frank Lopez, Jr.	Independent	11180	11180		
+2022	48	TX	H	24	0	candidate	Beth Van Duyne	Republican	177947	177947		
+2022	48	TX	H	24	0	candidate	Jan McDowell	Democrat	119878	119878		
+2022	48	TX	H	25	0	candidate	Roger Williams	Republican	185270	185270		
+2022	48	TX	H	26	0	candidate	Michael C. Burgess	Republican	183639	183639		
+2022	48	TX	H	26	0	candidate	Mike Kolls	Libertarian	81384	81384		
+2022	48	TX	H	27	0	candidate	Michael Cloud	Republican	133416	133416		
+2022	48	TX	H	27	0	candidate	Maclovio Perez, Jr.	Democrat	73611	73611		
+2022	48	TX	H	28	0	candidate	Cassy Garcia	Republican	71778	71778		
+2022	48	TX	H	28	0	candidate	Henry Cuellar	Democrat	93803	93803		
+2022	48	TX	H	29	0	candidate	Robert Schafranek	Republican	28765	28765		
+2022	48	TX	H	29	0	candidate	Sylvia R. Garcia	Democrat	71837	71837		
+2022	48	TX	H	30	0	candidate	James Rodgers	Republican	39209	39209		
+2022	48	TX	H	30	0	candidate	Jasmine Crockett	Democrat	134876	134876		
+2022	48	TX	H	30	0	candidate	Zachariah Manning	Independent	3820	3820		
+2022	48	TX	H	30	0	candidate	Phil Gray	Libertarian	1870	1870		
+2022	48	TX	H	30	0	writein	Debbie Walker	Write-in	738	738		
+2022	48	TX	H	31	0	candidate	John R. Carter	Republican	183185	183185		
+2022	48	TX	H	32	0	candidate	Antonio Swad	Republican	61494	61494		
+2022	48	TX	H	32	0	candidate	Colin Z. Allred	Democrat	116005	116005		
+2022	48	TX	H	33	0	candidate	Patrick David Gillespie	Republican	29203	29203		
+2022	48	TX	H	33	0	candidate	Marc A. Veasey	Democrat	82081	82081		
+2022	48	TX	H	33	0	candidate	Ken Ashby	Libertarian	2746	2746		
+2022	48	TX	H	34	0	candidate	Mayra Flores	Republican	59464	59464		
+2022	48	TX	H	34	0	candidate	Vicente Gonzalez	Democrat	70896	70896		
+2022	48	TX	H	34	0	candidate	Chris Royal	Independent	4079	4079		
+2022	48	TX	H	35	0	candidate	Dan McQueen	Republican	48969	48969		
+2022	48	TX	H	35	0	candidate	Greg Casar	Democrat	129599	129599		
+2022	48	TX	H	36	0	candidate	Brian Babin	Republican	145599	145599		
+2022	48	TX	H	36	0	candidate	Jon Haire	Democrat	64016	64016		
+2022	48	TX	H	37	0	candidate	Jenny Garcia Sharon	Republican	59923	59923		
+2022	48	TX	H	37	0	candidate	Lloyd Doggett	Democrat	219358	219358		
+2022	48	TX	H	37	0	candidate	Clark Patterson	Libertarian	6332	6332		
+2022	48	TX	H	37	0	writein	Sherri Lynn Taylor	Write-in	176	176		
+2022	49	TX	H	38	0	candidate	Wesley Hunt	Republican	163597	163597		
+2022	49	TX	H	38	0	candidate	Duncan F. Klussmann	Democrat	92302	92302		
+2022	49	TX	H	38	0	candidate	Joel Dejean	Independent	3970	3970		
+2022	49	UT	S		0	candidate	Mike Lee	Republican	571974	571974		
+2022	49	UT	S		0	candidate	Evan McMullin	Unaffiliated	459958	459958		
+2022	49	UT	S		0	candidate	James Arthur Hansen	Libertarian	31784	31784		
+2022	49	UT	S		0	candidate	Tommy Williams	Independent American	12103	12103		
+2022	49	UT	S		0	writein	Laird Fetzer-Hamblin	Write-in	152	152		
+2022	49	UT	S		0	writein	Michael Seguin	Write-in	60	60		
+2022	49	UT	S		0	writein	Abraham Korb	Write-in	37	37		
+2022	49	UT	H	1	0	candidate	Blake D. Moore	Republican	178434	178434		
+2022	49	UT	H	1	0	candidate	Rick Edwin Jones	Democrat	87986	87986		
+2022	49	UT	H	2	0	candidate	Chris Stewart	Republican	154883	154883		
+2022	49	UT	H	2	0	candidate	Nick Mitchell	Democrat	88224	88224		
+2022	49	UT	H	2	0	candidate	Jaymac McFarland	United Utah	8622	8622		
+2022	49	UT	H	2	0	candidate	Cassie Easley	Constitution	7670	7670		
+2022	50	UT	H	3	0	candidate	John R. Curtis	Republican	182497	182497		
+2022	50	UT	H	3	0	candidate	Glenn J. Wright	Democrat	83687	83687		
+2022	50	UT	H	3	0	candidate	Michael Stoddard	Libertarian	8287	8287		
+2022	50	UT	H	3	0	candidate	Daniel Clyde Cummings	Constitution	4874	4874		
+2022	50	UT	H	3	0	candidate	Aaron Heineman	Independent American	4035	4035		
+2022	50	UT	H	4	0	candidate	Burgess Owens	Republican	155110	155110		
+2022	50	UT	H	4	0	candidate	Darlene McDonald	Democrat	82181	82181		
+2022	50	UT	H	4	0	candidate	January Walker	United Utah	16740	16740		
+2022	50	UT	H	4	0	writein	Jonathan L. Peterson	Write-in	28	28		
+2022	50	VT	S		0	candidate	Gerald Malloy	Republican	80468	80468		
+2022	50	VT	S		0	candidate	Peter Welch	Democrat	196575	196575		
+2022	50	VT	S		0	candidate	Dawn Marie Ellis	Independent	2752	2752		
+2022	50	VT	S		0	candidate	Natasha Diamondstone-Kohout	Green Mountain	1574	1574		
+2022	50	VT	S		0	candidate	Kerry Patrick Raheb	Independent	1532	1532		
+2022	50	VT	S		0	candidate	Mark Coester	Independent	1273	1273		
+2022	50	VT	S		0	candidate	Stephen Duke	Independent	1209	1209		
+2022	50	VT	S		0	candidate	Cris Ericson	Independent	1105	1105		
+2022	50	VT	S		0	nonvote		Blank Votes	4542	4542		
+2022	50	VT	S		0	nonvote		Write-in	612	612		
+2022	50	VT	S		0	nonvote		Over Votes	313	313		
+2022	50	VT	H	1	0	candidate	Liam Madden	Republican	78397	78397		
+2022	50	VT	H	1	0	candidate	Becca Balint	Democrat	176494	176494		
+2022	50	VT	H	1	0	candidate	Ericka Redic	Libertarian	12590	12590		
+2022	50	VT	H	1	0	candidate	Matt Druzba	Independent	5737	5737		
+2022	50	VT	H	1	0	candidate	Luke Talbot	Independent	4428	4428		
+2022	50	VT	H	1	0	candidate	Adam Ortiz	Independent	3376	3376		
+2022	50	VT	H	1	0	nonvote		Blank Votes	9389	9389		
+2022	50	VT	H	1	0	nonvote		Write-in	1004	1004		
+2022	50	VT	H	1	0	nonvote		Over Votes	540	540		
+2022	51	VA	H	1	0	candidate	Robert J. Wittman	Republican	191828	191828		
+2022	51	VA	H	1	0	candidate	Herbert C. “Herb” Jones, Jr.	Democrat	147229	147229		
+2022	51	VA	H	1	0	candidate	David Bruce Foster	Independent	3388	3388		
+2022	51	VA	H	1	0	nonvote		Write-in	297	297		
+2022	51	VA	H	2	0	candidate	Jen A. Kiggans	Republican	153328	153328		
+2022	51	VA	H	2	0	candidate	Elaine G. Luria	Democrat	143219	143219		
+2022	51	VA	H	2	0	nonvote		Write-in	449	449		
+2022	51	VA	H	3	0	candidate	Terry T. Namkung	Republican	67668	67668		
+2022	51	VA	H	3	0	candidate	Robert C. “Bobby” Scott	Democrat	139659	139659		
+2022	51	VA	H	3	0	nonvote		Write-in	523	523		
+2022	51	VA	H	4	0	candidate	Leon Benjamin, Sr.	Republican	85503	85503		
+2022	51	VA	H	4	0	candidate	A. Donald McEachin	Democrat	159044	159044		
+2022	51	VA	H	4	0	nonvote		Write-in	431	431		
+2022	51	VA	H	5	0	candidate	Bob Good	Republican	177191	177191		
+2022	51	VA	H	5	0	candidate	Joshua M. Throneburg	Democrat	129996	129996		
+2022	51	VA	H	5	0	nonvote		Write-in	603	603		
+2022	51	VA	H	6	0	candidate	Ben Cline	Republican	173352	173352		
+2022	51	VA	H	6	0	candidate	Jennifer Lynn Lewis	Democrat	95410	95410		
+2022	51	VA	H	6	0	nonvote		Write-in	472	472		
+2022	51	VA	H	7	0	candidate	Yesli I. Vega	Republican	130586	130586		
+2022	51	VA	H	7	0	candidate	Abigail Davis Spanberger	Democrat	143357	143357		
+2022	51	VA	H	7	0	nonvote		Write-in	647	647		
+2022	51	VA	H	8	0	candidate	Karina A. Lipsman	Republican	66589	66589		
+2022	51	VA	H	8	0	candidate	Donald S. Beyer, Jr.	Democrat	197760	197760		
+2022	51	VA	H	8	0	candidate	Teddy Fikre	Independent	4078	4078		
+2022	51	VA	H	8	0	nonvote		Write-in	509	509		
+2022	51	VA	H	9	0	candidate	H. Morgan Griffith	Republican	182207	182207		
+2022	51	VA	H	9	0	candidate	Taysha Lee DeVaughan	Democrat	66027	66027		
+2022	51	VA	H	9	0	nonvote		Write-in	558	558		
+2022	51	VA	H	10	0	candidate	Hung Cao	Republican	138163	138163		
+2022	51	VA	H	10	0	candidate	Jennifer Wexton	Democrat	157405	157405		
+2022	51	VA	H	10	0	nonvote		Write-in	577	577		
+2022	51	VA	H	11	0	candidate	James G. “Jim” Myles	Republican	95634	95634		
+2022	51	VA	H	11	0	candidate	Gerald E. Connolly	Democrat	193190	193190		
+2022	51	VA	H	11	0	nonvote		Write-in	852	852		

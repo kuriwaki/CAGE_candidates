@@ -1,0 +1,7 @@
+type,state,office,dist,special,page,kind,name,detail
+reader flag,FL,H,20,0,17,candidate,Sheila Cherfilus-McCormick,"unopposed; vote column shows footnote (1), no figure"
+reader flag,ME,H,2,0,31,candidate,Austin Theriault,figure is not the November first round
+reader flag,ME,H,2,0,31,candidate,Jared F. Golden,figure is not the November first round
+reader flag,ME,H,2,0,31,nonvote,Continuing Ballots,figure is not the November first round
+reader flag,ME,H,2,0,31,nonvote,Exhausted Ballots,figure is not the November first round
+reader flag,OK,H,3,0,58,candidate,Frank D. Lucas,"unopposed; vote column shows footnote (1), no figure printed"

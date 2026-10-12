@@ -1,0 +1,14 @@
+scope,reason,state,office,dist,special,page,kind,name_printed,party_lines,line_votes,candidatevotes,footnote,flags
+race,ranked-choice race with no first-round majority: CAGE keeps the final tabulation round,AK,H,1,0,4,candidate,Nick Begich,Republican,159550,159550,,
+race,ranked-choice race with no first-round majority: CAGE keeps the final tabulation round,AK,H,1,0,4,candidate,Mary Sattler Peltola,Democrat,152828,152828,,
+race,ranked-choice race with no first-round majority: CAGE keeps the final tabulation round,AK,H,1,0,4,candidate,Eric Hafner,Democrat,3417,3417,,
+race,ranked-choice race with no first-round majority: CAGE keeps the final tabulation round,AK,H,1,0,4,candidate,John Wayne Howe,Independence,13010,13010,,
+race,ranked-choice race with no first-round majority: CAGE keeps the final tabulation round,AK,H,1,0,4,nonvote,,Write-in,750,750,,
+race,special election,CA,S,,1,8,candidate,Steve Garvey,Republican,6204637,6204637,,
+race,special election,CA,S,,1,8,candidate,Adam B. Schiff,Democrat,8837051,8837051,,
+race,figure may not be the November first round (footnote or ranked-choice lines),ME,H,2,0,31,candidate,Austin Theriault,Republican,194445,194445,,figure is not the November first round
+race,figure may not be the November first round (footnote or ranked-choice lines),ME,H,2,0,31,candidate,Jared F. Golden,Democrat,197151,197151,,figure is not the November first round
+race,figure may not be the November first round (footnote or ranked-choice lines),ME,H,2,0,31,nonvote,,Continuing Ballots,391596,391596,,figure is not the November first round
+race,figure may not be the November first round (footnote or ranked-choice lines),ME,H,2,0,31,nonvote,,Exhausted Ballots,11340,11340,,figure is not the November first round
+race,special election,NE,S,,1,43,candidate,Pete Ricketts,Republican,585103,585103,,
+race,special election,NE,S,,1,43,candidate,"Preston Love, Jr.",Democrat,349902,349902,,

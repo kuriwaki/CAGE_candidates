@@ -1,4 +1,4 @@
-# Task: add an election year from the Clerk of the House volume
+# Task: fill a year's official House and Senate results from the Clerk volume
 
 Execute this task for the year named in the request, for example
 "Execute .claude/skills/clerk-election-returns/TASK.md for 2026".
@@ -14,7 +14,7 @@ Read these two files in full. They govern every step below.
    every reader follows.
 
 This task only creates new files under `data/clerk/` and `data/<year>/`. Do not
-edit existing scripts, the guide, or data from earlier years.
+edit existing scripts, the guide, the Google Sheet, or data from earlier years.
 
 ## 1. Fetch the volume
 
@@ -29,14 +29,17 @@ The file must be a PDF and the cover must name the November <year> election.
 If either check fails (the volume is usually published about four months after
 the election), stop and report it.
 
-## 2. Prepare the reader folder
+## 2. Prepare the reader folder and the roster
 
 ```bash
 Rscript .claude/skills/clerk-election-returns/scripts/prepare_reading.R <year>
 ```
 
-This writes `data/clerk/claude_read/<year>/`: page images, `history.tsv`,
-`party_labels.tsv`, `reader.md` and `batches.csv`.
+This reads the roster from the Google Sheet tab `Results_<year>` and writes
+`data/clerk/claude_read/<year>/`: page images, `roster.csv`, `reader.md` and
+`batches.csv`. If googlesheets4 cannot find a cached login, stop and ask the user
+to sign in (see README.md). For a validation year, pass the test roster instead:
+`--roster data/<year>/roster_test.csv` (see the end of this file).
 
 ## 3. Read the volume
 
@@ -48,7 +51,7 @@ page from the prompt when that cell is empty.
 
 ```
 You are transcribing part of the <year> Clerk of the House "Statistics of the
-Congressional Election" volume into candidate rows.
+Congressional Election" volume into ballot-line rows.
 
 Working directory: <absolute path to data/clerk/claude_read/<year>>
 
@@ -61,14 +64,14 @@ Working directory: <absolute path to data/clerk/claude_read/<year>>
    NOT output rows printed on them): <context_before> and <context_after>.
 4. If a figure is hard to read, re-render that region at higher resolution and
    look again, e.g.
-   `mkdir -p work/zoom_<start> && pdftoppm -f P -l P -r 300 -x 0 -y 0 -W 2550 -H 1100 -png -singlefile ../../<year>election.pdf work/zoom_<start>/pPPP`
+   `mkdir -p work/<start> && pdftoppm -f P -l P -r 300 -x 0 -y 0 -W 2550 -H 1100 -png -singlefile ../../<year>election.pdf work/<start>/pPPP`
    Only pdftoppm is allowed on the PDF.
-5. Coding files: `history.tsv` (dataset rows from earlier years: year, state,
-   office, dist, type, party, party_formal, name_snyder) and `party_labels.tsv`
-   (state, party_formal, party, n). Search them with grep.
-6. Use only the files named here. Do not open any other file on this computer
-   and do not search the web.
-7. Write the output to `<output>` exactly as specified in reader.md.
+5. Use only the files named here. Do not open any other file on this computer
+   (including roster.csv) and do not search the web. Keep every scratch file in
+   your own folder `work/<start>/`; other readers work in the same directory at
+   the same time.
+6. Write the output to `<output>` exactly as specified in reader.md, every
+   column on every row.
 
 When you finish, reply briefly with the number of rows by kind, anything in
 reader.md that was ambiguous, and any rows you flagged.
@@ -89,36 +92,45 @@ every row for internal consistency, and writes
 `data/<year>/candidates_<year>_discrepancies.csv` and
 `data/<year>/candidates_<year>_hand-entry.csv`.
 
-## 5. Build the skeleton
+## 5. Fill the roster
 
 ```bash
-Rscript .claude/skills/clerk-election-returns/scripts/build_skeleton.R <year>
+Rscript .claude/skills/clerk-election-returns/scripts/fill_roster.R <year>
 ```
 
-This writes `data/<year>/candidates_<year>_skeleton.csv`.
+This matches every printed candidate line to a roster row and writes
+`data/<year>/candidates_<year>_skeleton.csv`.
 
 ## 6. Report back
 
 Summarise for the user, briefly:
 
-- rows read, by kind, and the number of skeleton rows;
+- rows read, by kind; roster rows filled, roster rows not printed by the Clerk,
+  and rows added from the Clerk (`not in roster`), listing the added ones;
+- matches made only by elimination (`match = only unmatched pair in race`);
 - discrepancies by type, listing every one that is not a reader flag;
 - hand-entry races by reason, and any unnamed ballot lines;
+- rows flagged because the official figure differs from the live count by >10%;
 - anything readers reported as ambiguous in reader.md.
 
-Do not resolve discrepancies or fill in hand-entry races. Those are coded by
-hand.
+Do not resolve discrepancies, fill hand-entry races, or edit the Google Sheet.
 
 ## Validating on a year CAGE already covers
 
-To check the pipeline itself, execute steps 1–5 for a year already in CAGE
-(e.g. 2024; `prepare_reading.R` gives readers only earlier years' rows), then run
+To test the pipeline end to end on a past year (e.g. 2024), build a roster from
+CAGE first and pass it to step 2:
+
+```bash
+Rscript .claude/skills/clerk-election-returns/scripts/make_test_roster.R <year>
+Rscript .claude/skills/clerk-election-returns/scripts/prepare_reading.R <year> --roster data/<year>/roster_test.csv
+```
+
+Then run steps 3–5 as above, and
 
 ```bash
 Rscript .claude/skills/clerk-election-returns/scripts/validate_pipeline.R <year>
 ```
 
-It compares the skeleton and hand-entry list with the released CAGE rows for
-that year, prints the diagnostics, and writes them to
-`data/clerk/validation/<year>/`. Report the summary table and the listed
-differences to the user.
+It compares the skeleton with the audited CAGE rows for that year, prints the
+diagnostics, and writes them to `data/clerk/validation/<year>/`. Report the
+summary table and the listed differences to the user.

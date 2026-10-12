@@ -19,7 +19,7 @@ out_dir <- path("data", YEAR)
 dir_create(out_dir)
 
 COLS <- c("year", "page", "state", "office", "dist", "special", "kind", "name_printed", "party_lines",
-          "line_votes", "candidatevotes", "footnote", "party", "party_formal", "name_snyder", "name_basis", "flags")
+          "line_votes", "candidatevotes", "footnote", "flags")
 STATES <- c(state.abb, "DC", "AS", "GU", "PR", "VI", "MP")
 
 first_part <- \(x) str_trim(str_split_i(coalesce(x, ""), ";", 1))
@@ -30,9 +30,10 @@ batches <- read_csv(path(work_dir, "batches.csv"), show_col_types = FALSE)
 missing <- filter(batches, !file_exists(path(work_dir, output)))
 if (nrow(missing) > 0) stop("no reader output for pages ", str_c(missing$start, "-", missing$end, collapse = ", "))
 
+# rows written without their empty trailing cells are padded
 read_batch <- function(f) {
-  x <- read_tsv(f, col_types = cols(.default = "c"), quote = "", na = "")
-  if (!identical(names(x), COLS)) stop(f, " does not have the columns reader.md specifies")
+  x <- read_tsv(f, col_names = COLS, skip = 1, col_types = cols(.default = "c"), quote = "", na = "")
+  if (!identical(str_split_1(read_lines(f, n_max = 1), "\t"), COLS)) stop(f, " does not have the columns reader.md specifies")
   x
 }
 claude_raw <- map_dfr(path(work_dir, batches$output), read_batch) |>
@@ -52,20 +53,14 @@ claude <- claude_raw |>
 
 # Discrepancies ----
 
-issue <- \(df, type, detail) df |>
-  transmute(type = type, state, office, dist, special, page, kind, name = label, detail = {{ detail }})
+issue <- \(df, what, detail) df |>
+  transmute(type = what, state, office, dist, special, page, kind, name = label, detail = {{ detail }})
 
 discrepancies <- bind_rows(
   claude |>
     filter(!state %in% STATES | !office %in% c("H", "S") | !special %in% c("0", "1") |
              !kind %in% c("candidate", "writein", "unnamed", "nonvote")) |>
     issue("unexpected code in state, office, special or kind", str_c(state, office, special, kind, sep = " / ")),
-  claude |>
-    filter(is_cand, !party %in% c("D", "R", "I", "Lbt", "Grn", "Other")) |>
-    issue("party missing or not one of D, R, I, Lbt, Grn, Other", party),
-  claude |>
-    filter(kind %in% c("candidate", "writein"), is.na(name_snyder)) |>
-    issue("candidate without name_snyder", name_printed),
   claude |>
     filter(n() > 1, .by = c(race, label, line_votes)) |>
     issue("line appears more than once", line_votes),
@@ -95,6 +90,9 @@ hand_races <- claude |>
       2 * max(total_votes[is_cand]) <= sum(total_votes[is_cand]),
     other_round = any(str_detect(coalesce(flags, ""), "not the November first round") |
                         str_detect(coalesce(footnote, ""), "(?i)runoff|ranked|round")),
+    # the volume does not always mark ranked-choice races; CAGE keeps the final round
+    ranked_choice = ((state[1] == "ME" & YEAR >= 2018) | (state[1] == "AK" & YEAR >= 2022)) &&
+      any(is_cand) && 2 * max(total_votes[is_cand], na.rm = TRUE) <= sum(total_votes[is_cand], na.rm = TRUE),
     .by = race
   ) |>
   pivot_longer(-race, names_to = "check", values_to = "hit") |>
@@ -102,7 +100,8 @@ hand_races <- claude |>
   mutate(reason = recode(check,
                          special_election = "special election",
                          no_majority = "runoff state with no majority: the deciding round is not in this volume",
-                         other_round = "figure may not be the November first round (footnote or ranked-choice lines)")) |>
+                         other_round = "figure may not be the November first round (footnote or ranked-choice lines)",
+                         ranked_choice = "ranked-choice race with no first-round majority: CAGE keeps the final tabulation round")) |>
   summarise(reason = str_c(reason, collapse = "; "), .by = race)
 
 hand_entry <- bind_rows(
@@ -114,7 +113,7 @@ hand_entry <- bind_rows(
     mutate(scope = "line", reason = "ballot line with no candidate name printed")
 ) |>
   select(scope, reason, state, office, dist, special, page, kind, name_printed, party_lines, line_votes,
-         candidatevotes, footnote, party, party_formal, name_snyder, flags) |>
+         candidatevotes, footnote, flags) |>
   arrange(scope, state, office, as.integer(dist))
 
 write_csv(hand_entry, path(out_dir, str_glue("candidates_{YEAR}_hand-entry.csv")), na = "")
