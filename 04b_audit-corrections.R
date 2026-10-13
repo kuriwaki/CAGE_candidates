@@ -2324,29 +2324,34 @@ cand <- cand |>
 
 # 28. Missing governor races ----
 # Snyder drops most governor races won by independents, plus NJ 2017 and 2023; figures from each state's
-# official returns. AK 1990, AK 2014 and MN 1998 print surnames only; given names are the
+# official returns, linked above each race. AK 1990, AK 2014 and MN 1998 print surnames only; given names are the
 # commonly reported ones. MN 1998 uses the SOS results book, which amends the canvass report
 gov_missing <- tribble(
   ~state, ~year, ~office, ~dist, ~type, ~nextup, ~party, ~party_formal, ~name_snyder, ~inc, ~vote_g, ~w_g,
+  # https://www.elections.alaska.gov/results/90GENR/90genr.pdf
   "AK", 1990, "G", NA, "G", 1994, "Other", "AK Indep", "HICKEL, WALTER J. (WALLY)", 0, 75721, 1,
   "AK", 1990, "G", NA, "G", 1994, "D", "D", "KNOWLES, TONY", 0, 60201, 0,
   "AK", 1990, "G", NA, "G", 1994, "R", "R", "STURGULEWSKI, ARLISS", 0, 50991, 0,
   "AK", 1990, "G", NA, "G", 1994, "Grn", "Grn", "SYKES, JAMES L. (JIM)", 0, 6563, 0,
   "AK", 1990, "G", NA, "G", 1994, "Other", "The Political Party", "O'CALLAGHAN, MICHAEL", 0, 942, 0,
+  # https://ct.elstats.civera.com/api/download_contest/10648_table.csv?split_party=false
   "CT", 1990, "G", NA, "G", 1994, "Other", "CT Pty", "WEICKER, LOWELL P., JR.", 0, 460576, 1,
   "CT", 1990, "G", NA, "G", 1994, "R", "R", "ROWLAND, JOHN G.", 0, 427840, 0,
   "CT", 1990, "G", NA, "G", 1994, "D", "D", "MORRISON, BRUCE A.", 0, 236641, 0,
   "CT", 1990, "G", NA, "G", 1994, "Other", "Concerned Cit", "ZDONCZYK, JOSEPH A.", 0, 16044, 0,
+  # https://lldc.mainelegislature.org/Open/Elections/Returns/1994/19941108/elec_19941108c.pdf
   "ME", 1994, "G", NA, "G", 1998, "I", "I", "KING, ANGUS S., JR.", 0, 180829, 1,
   "ME", 1994, "G", NA, "G", 1998, "D", "D", "BRENNAN, JOSEPH E.", 0, 172951, 0,
   "ME", 1994, "G", NA, "G", 1998, "R", "R", "COLLINS, SUSAN M.", 0, 117990, 0,
   "ME", 1994, "G", NA, "G", 1998, "Grn", "Grn", "CARTER, JONATHAN K.", 0, 32695, 0,
   "ME", 1994, "G", NA, "G", 1998, "Other", "W-I", "FINKS, MARK S.", 0, 6576, 0,
+  # https://lldc.mainelegislature.org/Open/Elections/Returns/1998/19981103/elec_19981103c.pdf
   "ME", 1998, "G", NA, "G", 2002, "I", "I", "KING, ANGUS S., JR.", 1, 246772, 1,
   "ME", 1998, "G", NA, "G", 2002, "R", "R", "LONGLEY, JAMES B., JR.", 0, 79716, 0,
   "ME", 1998, "G", NA, "G", 2002, "D", "D", "CONNOLLY, THOMAS J.", 0, 50506, 0,
   "ME", 1998, "G", NA, "G", 2002, "Grn", "Grn", "LAMARCHE, PATRICIA H. (PAT)", 0, 28722, 0,
   "ME", 1998, "G", NA, "G", 2002, "Other", "Taxpayers", "CLARKE, WILLIAM P.", 0, 15293, 0,
+  # https://www.lrl.mn.gov/archive/sessions/electionresults/1998-11-03-g-sec.pdf
   "MN", 1998, "G", NA, "G", 2002, "Other", "Reform", "VENTURA, JESSE", 0, 773403, 1,
   "MN", 1998, "G", NA, "G", 2002, "R", "R", "COLEMAN, NORMAN (NORM)", 0, 716880, 0,
   "MN", 1998, "G", NA, "G", 2002, "D", "DFL", "HUMPHREY, HUBERT H. (SKIP), III", 0, 587060, 0,
@@ -2355,6 +2360,7 @@ gov_missing <- tribble(
   "MN", 1998, "G", NA, "G", 2002, "Other", "Grassroots", "WRIGHT, CHRIS", 0, 1727, 0,
   "MN", 1998, "G", NA, "G", 2002, "Other", "The People's Champion", "MCCLONEY, RAY", 0, 919, 0,
   "MN", 1998, "G", NA, "G", 2002, "Other", "SWP", "FISKE, THOMAS A.", 0, 787, 0,
+  # https://elections.ri.gov/sites/g/files/xkgbur756/files/publications/Election_Publications/Countbooks/2010-Countbook.pdf
   "RI", 2010, "G", NA, "G", 2014, "I", "I", "CHAFEE, LINCOLN D. (LINC)", 0, 123571, 1,
   "RI", 2010, "G", NA, "G", 2014, "R", "R", "ROBITAILLE, JOHN F.", 0, 114911, 0,
   "RI", 2010, "G", NA, "G", 2014, "D", "D", "CAPRIO, FRANK T.", 0, 78896, 0,
@@ -2362,10 +2368,12 @@ gov_missing <- tribble(
   "RI", 2010, "G", NA, "G", 2014, "I", "I", "LUSI, JOSEPH M.", 0, 1091, 0,
   "RI", 2010, "G", NA, "G", 2014, "I", "I", "GIROUX, TODD", 0, 882, 0,
   "RI", 2010, "G", NA, "G", 2014, "I", "I", "ALGIERI, RONALD", 0, 793, 0,
+  # https://www.elections.alaska.gov/results/14GENR/data/results.htm
   "AK", 2014, "G", NA, "G", 2018, "I", "I", "WALKER, WILLIAM M. (BILL)", 0, 134658, 1,
   "AK", 2014, "G", NA, "G", 2018, "R", "R", "PARNELL, SEAN R.", 1, 128435, 0,
   "AK", 2014, "G", NA, "G", 2018, "Lbt", "Lbt", "CLIFT, ROBERT EDWARD (ROB)", 0, 8985, 0,
   "AK", 2014, "G", NA, "G", 2018, "Other", "Const", "MYERS, J.R.", 0, 6987, 0,
+  # https://nj.gov/state/elections/assets/pdf/election-results/2017/2017-official-general-election-results-governor.pdf
   "NJ", 2017, "G", NA, "G", 2021, "D", "D", "MURPHY, PHILIP", 0, 1203110, 1,
   "NJ", 2017, "G", NA, "G", 2021, "R", "R", "GUADAGNO, KIM", 0, 899583, 0,
   "NJ", 2017, "G", NA, "G", 2021, "Other", "Reduce Property Taxes", "GENOVESE, GINA", 0, 12294, 0,
@@ -2373,12 +2381,15 @@ gov_missing <- tribble(
   "NJ", 2017, "G", NA, "G", 2021, "Grn", "Grn", "KAPER-DALE, SETH", 0, 10053, 0,
   "NJ", 2017, "G", NA, "G", 2021, "Other", "Const", "RICCARDI, MATTHEW", 0, 6864, 0,
   "NJ", 2017, "G", NA, "G", 2021, "Other", "We the People", "ROSS, VINCENT", 0, 4980, 0,
+  # https://elect.ky.gov/results/2020-2029/Documents/Certification%20of%20Election%20Results%20for%202023%20General%20Election%20Final.pdf
   "KY", 2023, "G", NA, "G", 2027, "D", "D", "BESHEAR, ANDY", 1, 694482, 1,
   "KY", 2023, "G", NA, "G", 2027, "R", "R", "CAMERON, DANIEL", 0, 627457, 0,
   "KY", 2023, "G", NA, "G", 2027, "Other", "W-I", "FISHBACK, BRIAN", 0, 83, 0,
+  # https://sos.ms.gov/elections/electionresults/2023General/State%20Certified%20Results/2023%20Statewide%20Recapitulation%20Sheet.pdf
   "MS", 2023, "G", NA, "G", 2027, "R", "R", "REEVES, JONATHAN (TATE)", 1, 418233, 1,
   "MS", 2023, "G", NA, "G", 2027, "D", "D", "PRESLEY, BRANDON", 0, 391614, 0,
   "MS", 2023, "G", NA, "G", 2027, "I", "I", "GRAY, GWENDOLYN", 0, 11153, 0,
+  # https://voterportal.sos.la.gov/ElectionResults/ElectionResults/Data?blob=20231014/RacesCandidates_Multiparish.htm
   "LA", 2023, "G", NA, "G", 2027, "R", "R", "LANDRY, JEFFREY M. (JEFF)", 0, 547827, 1,
   "LA", 2023, "G", NA, "G", 2027, "D", "D", "WILSON, SHAWN D.", 0, 275525, 0,
   "LA", 2023, "G", NA, "G", 2027, "R", "R", "WAGUESPACK, STEPHEN (WAGS)", 0, 62287, 0,
@@ -2436,7 +2447,301 @@ cand <- cand |>
   tidylog::filter(!(year == 2022 & state == "ID" & name_snyder == "SIERRA, CARTA REALE")) |>
   tidylog::mutate(name_snyder = replace(name_snyder, state == "ID" & name_snyder == "SIERRA, IDAHO LAW - CARTA", "LAW, IDAHO SIERRA"))
 
-# 31. Write-ins ----
+# 31. Fusion labels (NY, CT, SC) ----
+# one format for every year, as in 2018-2024: lines in printed order, comma-space separated, the same
+# abbreviation for each party. 1998-2024 House and Senate lines follow the Clerk volumes (2004 and 2016 had kept
+# only the major-party line); 1990-1996 keep Snyder's lines. Olchin, Vitanza and McLaughlin ran as Libertarians;
+# Snyder's CT "Lbt?" rows are Libertarians on the Clerk's page
+fusion_abbrev <- c(
+  C = "Conservative", Cons = "Conservative", CR = "Conservative", CRV = "Conservative",
+  WF = "Wk Fam", Indep = "I", IDP = "I", In = "I", IN = "I", "Women's Equality" = "WE",
+  Rfm = "Reform", Green = "Grn", Libertarian = "Lbt", "Lbt?" = "Lbt", L = "Liberal", "Right To Life" = "RTL",
+  Constitution = "Const", "Write-in" = "W-I", "Serve Amer Movement" = "SAM", "Save Amer Movement" = "SAM",
+  Tax = "Tax Revolt", "I Fus" = "Independence Fusion", "Indep Fus" = "Independence Fusion",
+  "Concerned Citizens" = "Concerned Cit", "Connecticut for Lieberman" = "CT for Lieberman",
+  UC = "United Citizens", "United Cit" = "United Citizens", "UNITED CITIZENS" = "United Citizens",
+  NL = "Natural Law", "Nat Law" = "Natural Law", SW = "SWP", SocWk = "SWP"
+)
+
+fusion_lines <- tribble(
+  ~year, ~state, ~office, ~dist, ~type, ~name_snyder, ~party_formal,
+  1998, "NY", "H", 1, "G", "FORBES, MICHAEL P.", "R, Conservative, RTL, I",
+  1998, "NY", "H", 27, "G", "COOK, WILLIAM R. (BILL)", "D, RTL, I",
+  1998, "NY", "H", 5, "G", "ROBINSON, ANNE T.", "Liberal",
+  1998, "NY", "H", 6, "G", "MEEKS, GREGORY W.", "D, I, Liberal",
+  2000, "CT", "H", 2, "G", "SIMMONS, ROBERT R. (ROB)", "R, I",
+  2000, "NY", "H", 1, "G", "GRUCCI, FELIX J., JR.", "R, Conservative, I, RTL",
+  2000, "NY", "H", 15, "G", "RANGEL, CHARLES B.", "D, Wk Fam, Liberal",
+  2000, "NY", "H", 19, "G", "GRAHAM, LARRY OTIS", "D, Wk Fam, Liberal",
+  2000, "NY", "H", 2, "G", "BISHOP, DAVID A.", "Grn, Wk Fam, I",
+  2000, "NY", "H", 20, "G", "FEINER, PAUL J.", "D, Grn, Wk Fam, Liberal",
+  2000, "NY", "H", 22, "G", "MCCALLION, KENNETH F.", "D, Grn, Wk Fam",
+  2000, "NY", "H", 24, "G", "SMITH, WILLARD E.", "Grn, I",
+  2000, "NY", "H", 26, "G", "HINCHEY, MAURICE D.", "D, Wk Fam, Liberal, I",
+  2000, "NY", "H", 29, "G", "LAFALCE, JOHN J.", "D, Liberal, I",
+  2000, "NY", "H", 3, "G", "LAMAGNA, DAL ANTHONY", "D, Grn, Wk Fam",
+  2000, "NY", "H", 30, "G", "FEE, JOHN", "D, Grn, Wk Fam, Liberal",
+  2000, "NY", "H", 4, "G", "MCCARTHY, CAROLYN", "D, Wk Fam, I",
+  2000, "NY", "H", 5, "G", "ACKERMAN, GARY L.", "D, Wk Fam, Liberal, I",
+  2000, "NY", "H", 8, "G", "NADLER, JERROLD L. (JERRY)", "D, Wk Fam, Liberal",
+  2000, "NY", "S", 1, "G", "CLINTON, HILLARY RODHAM", "D, Wk Fam, Liberal",
+  2002, "NY", "H", 1, "G", "GRUCCI, FELIX J., JR.", "R, Conservative, I, RTL",
+  2002, "NY", "H", 13, "G", "MATTSSON, ARNE M.", "D, Wk Fam, Liberal",
+  2002, "NY", "H", 14, "G", "MALONEY, CAROLYN B.", "D, I, Wk Fam, Liberal",
+  2002, "NY", "H", 17, "G", "ENGEL, ELIOT L.", "D, Wk Fam, Liberal",
+  2002, "NY", "H", 17, "G", "VANDERHOEF, C. SCOTT", "R, Conservative, I",
+  2002, "NY", "H", 19, "G", "KELLY, SUE W.", "R, Conservative, I",
+  2002, "NY", "H", 21, "G", "MCNULTY, MICHAEL R.", "D, Conservative, I, Wk Fam",
+  2002, "NY", "H", 22, "G", "HINCHEY, MAURICE D.", "D, I, Wk Fam, Liberal",
+  2002, "NY", "H", 25, "G", "WALSH, JAMES THOMAS (JIM)", "R, Conservative, I",
+  2002, "NY", "H", 26, "G", "REYNOLDS, THOMAS M.", "R, Conservative, I",
+  2002, "NY", "H", 28, "G", "WOJTASZEK, HENRY F.", "R, Conservative, I",
+  2002, "NY", "H", 4, "G", "MCCARTHY, CAROLYN", "D, I, Wk Fam, Liberal",
+  2002, "NY", "H", 5, "G", "ACKERMAN, GARY L.", "D, I, Wk Fam, Liberal",
+  2002, "NY", "H", 6, "G", "MEEKS, GREGORY W.", "D, Wk Fam, Liberal",
+  2002, "NY", "H", 8, "G", "NADLER, JERROLD L. (JERRY)", "D, Wk Fam, Liberal",
+  2002, "NY", "H", 9, "G", "WEINER, ANTHONY DAVID", "D, Wk Fam, Liberal",
+  2004, "NY", "H", 1, "G", "BISHOP, TIMOTHY H. (TIM)", "D, I, Wk Fam",
+  2004, "NY", "H", 1, "G", "MANGER, WILLIAM", "R, Conservative",
+  2004, "NY", "H", 10, "G", "TOWNS, EDOLPHUS (ED)", "D, Wk Fam",
+  2004, "NY", "H", 11, "G", "OWENS, MAJOR ROBERT ODELL", "D, Wk Fam",
+  2004, "NY", "H", 12, "G", "RODRIGUEZ, PAUL", "R, Conservative",
+  2004, "NY", "H", 12, "G", "VELAZQUEZ, NYDIA M.", "D, Wk Fam",
+  2004, "NY", "H", 13, "G", "BARBARO, FRANK J.", "D, I, Wk Fam",
+  2004, "NY", "H", 13, "G", "FOSSELLA, VITO J., JR.", "R, Conservative",
+  2004, "NY", "H", 14, "G", "MALONEY, CAROLYN B.", "D, I, Wk Fam",
+  2004, "NY", "H", 14, "G", "SRDANOVIC, ANTON", "R, Conservative",
+  2004, "NY", "H", 15, "G", "RANGEL, CHARLES B.", "D, Wk Fam",
+  2004, "NY", "H", 16, "G", "MOHAMED, ALI", "R, Conservative",
+  2004, "NY", "H", 16, "G", "SERRANO, JOSE E.", "D, Wk Fam",
+  2004, "NY", "H", 17, "G", "ENGEL, ELIOT L.", "D, Wk Fam",
+  2004, "NY", "H", 18, "G", "LOWEY, NITA M.", "D, I, Wk Fam",
+  2004, "NY", "H", 19, "G", "KELLY, SUE W.", "R, Conservative, I",
+  2004, "NY", "H", 2, "G", "HOFFMANN, RICHARD", "R, Conservative",
+  2004, "NY", "H", 2, "G", "ISRAEL, STEVE J.", "D, I, Wk Fam",
+  2004, "NY", "H", 20, "G", "SWEENEY, JOHN E.", "R, Conservative, I",
+  2004, "NY", "H", 21, "G", "MCNULTY, MICHAEL R.", "D, Conservative, I, Wk Fam",
+  2004, "NY", "H", 22, "G", "HINCHEY, MAURICE D.", "D, I, Wk Fam",
+  2004, "NY", "H", 23, "G", "MCHUGH, JOHN M.", "R, Conservative, I",
+  2004, "NY", "H", 24, "G", "BOEHLERT, SHERWOOD L. (SHERRY)", "R, I",
+  2004, "NY", "H", 25, "G", "WALSH, JAMES THOMAS (JIM)", "R, Conservative, I",
+  2004, "NY", "H", 26, "G", "DAVIS, JOHN R. (JACK)", "D, Wk Fam",
+  2004, "NY", "H", 26, "G", "REYNOLDS, THOMAS M.", "R, Conservative, I",
+  2004, "NY", "H", 27, "G", "HIGGINS, BRIAN M.", "D, I, Wk Fam",
+  2004, "NY", "H", 27, "G", "NAPLES, NANCY", "R, Conservative",
+  2004, "NY", "H", 28, "G", "LABA, MICHAEL D.", "R, Conservative",
+  2004, "NY", "H", 28, "G", "SLAUGHTER, LOUISE MCINTOSH", "D, Wk Fam",
+  2004, "NY", "H", 29, "G", "BAREND, SAMARA", "D, Wk Fam",
+  2004, "NY", "H", 3, "G", "KING, PETER T. (PETE)", "R, Conservative, I",
+  2004, "NY", "H", 4, "G", "GARNER, JAMES", "R, Conservative",
+  2004, "NY", "H", 4, "G", "MCCARTHY, CAROLYN", "D, I, Wk Fam",
+  2004, "NY", "H", 5, "G", "ACKERMAN, GARY L.", "D, I, Wk Fam",
+  2004, "NY", "H", 5, "G", "GRAVES, STEPHEN E.", "R, Conservative",
+  2004, "NY", "H", 6, "G", "MEEKS, GREGORY W.", "D, Wk Fam",
+  2004, "NY", "H", 7, "G", "CROWLEY, JOSEPH (JOE)", "D, Wk Fam",
+  2004, "NY", "H", 8, "G", "HORT, PETER", "R, Conservative, I",
+  2004, "NY", "H", 8, "G", "NADLER, JERROLD L. (JERRY)", "D, Wk Fam",
+  2004, "NY", "H", 9, "G", "CRONIN, GERARD", "R, Conservative, I",
+  2004, "NY", "H", 9, "G", "WEINER, ANTHONY DAVID", "D, Wk Fam",
+  2004, "NY", "S", 3, "G", "SCHUMER, CHARLES E. (CHUCK)", "D, I, Wk Fam",
+  2004, "SC", "H", 6, "G", "MCLEOD, GARY M.", "R, Const",
+  2004, "SC", "S", 3, "G", "NWANGAZA, EFIA", "Grn, I",
+  2006, "NY", "H", 1, "G", "BISHOP, TIMOTHY H. (TIM)", "D, Wk Fam, I",
+  2006, "NY", "H", 11, "G", "FINGER, STEPHEN", "R, Lbt",
+  2006, "NY", "H", 14, "G", "MAIO, DANNIEL S.", "R, Let's Do It",
+  2006, "NY", "H", 14, "G", "MALONEY, CAROLYN B.", "D, Wk Fam, I",
+  2006, "NY", "H", 2, "G", "ISRAEL, STEVE J.", "D, Wk Fam, I",
+  2006, "NY", "H", 21, "G", "MCNULTY, MICHAEL R.", "D, Conservative, Wk Fam, I",
+  2006, "NY", "H", 22, "G", "HINCHEY, MAURICE D.", "D, Wk Fam, I",
+  2006, "NY", "H", 24, "G", "ARCURI, MICHAEL A.", "D, Wk Fam, I",
+  2006, "NY", "H", 26, "G", "DAVIS, JOHN R. (JACK)", "D, Wk Fam, I",
+  2006, "NY", "H", 27, "G", "HIGGINS, BRIAN M.", "D, Wk Fam, I",
+  2006, "NY", "H", 28, "G", "SLAUGHTER, LOUISE MCINTOSH", "D, Wk Fam, I",
+  2006, "NY", "H", 4, "G", "MCCARTHY, CAROLYN", "D, Wk Fam, I",
+  2006, "NY", "H", 5, "G", "ACKERMAN, GARY L.", "D, Wk Fam, I",
+  2006, "NY", "S", 1, "G", "CLINTON, HILLARY RODHAM", "D, Wk Fam, I",
+  2008, "NY", "H", 1, "G", "BISHOP, TIMOTHY H. (TIM)", "D, Wk Fam, I",
+  2008, "NY", "H", 3, "G", "KING, PETER T. (PETE)", "R, Conservative, I",
+  2010, "NY", "H", 27, "G", "ROBERTO, LEONARD A.", "R, Conservative, Taxp",
+  2012, "NY", "H", 2, "G", "KING, PETER T. (PETE)", "R, Tax Revolt, Conservative, I",
+  2012, "NY", "H", 3, "G", "LABATE, STEPHEN A.", "R, Tax Revolt, Conservative",
+  2012, "NY", "H", 6, "G", "HALLORAN, DANIEL J. (DAN), III", "R, Conservative, Lbt",
+  2014, "NY", "H", 2, "G", "KING, PETER T. (PETE)", "R, Tax Revolt, Conservative, I",
+  2014, "NY", "H", 3, "G", "LALLY, GRANT M.", "R, Conservative, Lbt",
+  2016, "CT", "H", 1, "G", "LARSON, JOHN B.", "D, Wk Fam",
+  2016, "CT", "H", 2, "G", "COURTNEY, JOSEPH D. (JOE)", "D, Wk Fam",
+  2016, "CT", "H", 3, "G", "DELAURO, ROSA L.", "D, Wk Fam",
+  2016, "CT", "H", 4, "G", "SHABAN, JOHN T.", "R, I",
+  2016, "CT", "H", 5, "G", "COPE, CLAY", "R, I",
+  2016, "CT", "H", 5, "G", "ESTY, ELIZABETH H.", "D, Wk Fam",
+  2016, "CT", "S", 3, "G", "BLUMENTHAL, RICHARD", "D, Wk Fam",
+  2016, "NY", "H", 1, "G", "THRONE-HOLST, ANNA E.", "D, Wk Fam, WE",
+  2016, "NY", "H", 1, "G", "ZELDIN, LEE M.", "R, Conservative, I, Reform",
+  2016, "NY", "H", 10, "G", "NADLER, JERROLD L. (JERRY)", "D, Wk Fam, WE",
+  2016, "NY", "H", 10, "G", "ROSENTHAL, PHILIP J. (PHIL)", "R, Conservative, I, Stop Iran Deal",
+  2016, "NY", "H", 11, "G", "DONOVAN, DANIEL M. (DAN), JR.", "R, Conservative, I, Reform",
+  2016, "NY", "H", 12, "G", "MALONEY, CAROLYN B.", "D, Wk Fam",
+  2016, "NY", "H", 13, "G", "EVANS, ROBERT ANTHONY (TONY)", "R, I",
+  2016, "NY", "H", 14, "G", "CROWLEY, JOSEPH (JOE)", "D, Wk Fam, WE",
+  2016, "NY", "H", 14, "G", "SPOTORNO, FRANK J.", "R, Conservative",
+  2016, "NY", "H", 16, "G", "ENGEL, ELIOT L.", "D, Wk Fam, WE",
+  2016, "NY", "H", 17, "G", "LOWEY, NITA M.", "D, Wk Fam, WE",
+  2016, "NY", "H", 18, "G", "MALONEY, SEAN PATRICK", "D, I, Wk Fam, WE",
+  2016, "NY", "H", 18, "G", "OLIVA, PHIL", "R, Conservative, Reform",
+  2016, "NY", "H", 19, "G", "FASO, JOHN J.", "R, Conservative, I, Reform",
+  2016, "NY", "H", 19, "G", "TEACHOUT, ZEPHYR R.", "D, Wk Fam",
+  2016, "NY", "H", 2, "G", "GREGORY, DUWAYNE", "D, Wk Fam, I, WE",
+  2016, "NY", "H", 2, "G", "KING, PETER T. (PETE)", "R, Tax Revolt, Conservative, Reform",
+  2016, "NY", "H", 20, "G", "TONKO, PAUL DAVID", "D, Wk Fam, I, WE",
+  2016, "NY", "H", 20, "G", "VITOLLO, FRANCIS JOSEPH (JOE)", "R, Conservative, Reform",
+  2016, "NY", "H", 21, "G", "DERRICK, WILLIAM MIKE", "D, Wk Fam",
+  2016, "NY", "H", 21, "G", "STEFANIK, ELISE M.", "R, Conservative, I, Reform",
+  2016, "NY", "H", 22, "G", "BABINEC, MARTIN", "Reform, Upstate Jobs",
+  2016, "NY", "H", 22, "G", "MYERS, KIM A.", "D, Wk Fam",
+  2016, "NY", "H", 22, "G", "TENNEY, CLAUDIA", "R, Conservative",
+  2016, "NY", "H", 23, "G", "PLUMB, JOHN F.", "D, Wk Fam",
+  2016, "NY", "H", 23, "G", "REED, THOMAS W. (TOM), II", "R, Conservative, I, Reform",
+  2016, "NY", "H", 24, "G", "DEACON, COLLEEN", "D, Wk Fam",
+  2016, "NY", "H", 24, "G", "KATKO, JOHN M.", "R, Conservative, I, Reform",
+  2016, "NY", "H", 25, "G", "ASSINI, MARK W.", "R, Conservative, I, Reform",
+  2016, "NY", "H", 25, "G", "SLAUGHTER, LOUISE MCINTOSH", "D, Wk Fam, WE",
+  2016, "NY", "H", 26, "G", "HIGGINS, BRIAN M.", "D, Wk Fam, WE",
+  2016, "NY", "H", 26, "G", "SCHRATZ, SHELLY", "R, Conservative",
+  2016, "NY", "H", 27, "G", "COLLINS, CHRISTOPHER C. (CHRIS)", "R, Conservative, I, Reform",
+  2016, "NY", "H", 3, "G", "MARTINS, JACK M.", "R, Conservative, Reform",
+  2016, "NY", "H", 4, "G", "GURFEIN, DAVID H. (BULL)", "R, Conservative, Reform",
+  2016, "NY", "H", 4, "G", "RICE, KATHLEEN M.", "D, WE",
+  2016, "NY", "H", 5, "G", "MEEKS, GREGORY W.", "D, WE",
+  2016, "NY", "H", 5, "G", "O'REILLY, MICHAEL A.", "R, Conservative",
+  2016, "NY", "H", 6, "G", "MAIO, DANNIEL S.", "R, Conservative, Blue Lives Matter",
+  2016, "NY", "H", 6, "G", "MENG, GRACE", "D, WE",
+  2016, "NY", "H", 7, "G", "ROMAGUERA, ALLAN E. (AL)", "R, Conservative",
+  2016, "NY", "H", 8, "G", "CAVANAGH, DANIEL J.", "Conservative",
+  2016, "NY", "H", 8, "G", "JEFFRIES, HAKEEM S.", "D, Wk Fam",
+  2016, "NY", "H", 9, "G", "BELLONE, ALAN", "Conservative",
+  2016, "NY", "H", 9, "G", "CLARKE, YVETTE DIANE", "D, Wk Fam",
+  2016, "NY", "S", 3, "G", "LONG, WENDY", "R, Conservative, Reform",
+  2016, "NY", "S", 3, "G", "SCHUMER, CHARLES E. (CHUCK)", "D, Wk Fam, I, WE",
+  2016, "SC", "H", 1, "G", "CHERNY, DIMITRI", "D, Wk Fam, Grn",
+  2016, "SC", "H", 2, "G", "BJORN, ARIK M.", "D, Grn",
+  2016, "SC", "H", 7, "G", "HYMAN, MAL", "D, Wk Fam, Grn",
+  2016, "SC", "S", 3, "G", "BLEDSOE, BILL", "Const, Lbt",
+  2016, "SC", "S", 3, "G", "DIXON, THOMAS", "D, Wk Fam, Grn",
+  2018, "CT", "H", 1, "G", "LARSON, JOHN B.", "D, Wk Fam",
+  2018, "CT", "H", 2, "G", "COURTNEY, JOSEPH D. (JOE)", "D, Wk Fam",
+  2018, "CT", "H", 3, "G", "DELAURO, ROSA L.", "D, Wk Fam",
+  2018, "CT", "H", 4, "G", "ARORA, HARRY", "R, I",
+  2018, "CT", "H", 5, "G", "HAYES, JAHANA", "D, Wk Fam",
+  2018, "CT", "H", 5, "G", "SANTOS, MANNY", "R, I",
+  2018, "CT", "S", 1, "G", "MURPHY, CHRISTOPHER SCOTT (CHRIS)", "D, Wk Fam",
+  2020, "NY", "H", 18, "G", "SMITH, SCOTT A.", "Lbt, SAM"
+)
+
+cand <- cand |>
+  tidylog::mutate(party_formal = if_else(
+    state %in% c("NY", "CT", "SC"),
+    map_chr(str_split(party_formal, ",\\s*"), \(l) paste(coalesce(fusion_abbrev[l], l), collapse = ", ")),
+    party_formal
+  )) |>
+  rows_update(fusion_lines, by = c("year", "state", "office", "dist", "type", "name_snyder"), unmatched = "error") |>
+  rows_update(tribble(
+    ~year, ~state, ~office, ~dist, ~type, ~name_snyder, ~party, ~party_formal,
+    2000, "NY", "H", 3, "G", "OLCHIN, SELMA", "Lbt", "Lbt",
+    2000, "NY", "H", 4, "G", "VITANZA, BARBARA", "Lbt", "Lbt",
+    2014, "SC", "H", 4, "G", "MCLAUGHLIN, CURTIS E., JR.", "Lbt", "Lbt",
+    1990, "CT", "H", 5, "G", "HARE, WILLIAM GEORGE", "Lbt", "Lbt",
+    1996, "NY", "H", 14, "G", "LEIGHTON, THOMAS K.", "I", "I, Grn",
+    1998, "CT", "S", 3, "G", "MOORE, WILDEY JUDD", "Lbt", "Lbt",
+    2000, "CT", "H", 4, "G", "GISLAO, DANIEL", "Lbt", "Lbt",
+    2000, "CT", "S", 1, "G", "MOORE, WILDEY JUDD", "Lbt", "Lbt",
+    2002, "CT", "H", 5, "G", "GENGARELLY, WALTER J.", "Lbt", "Lbt"
+  ), by = c("year", "state", "office", "dist", "type", "name_snyder"), unmatched = "error") |>
+  # vote_g is the sum of every line; these three carried one line or a stray figure
+  rows_update(tribble(
+    ~year, ~state, ~office, ~dist, ~type, ~name_snyder, ~vote_g,
+    2000, "NY", "H", 23, "G", "VICKERS, DAVID B.", 32854,
+    2012, "NY", "H", 6, "G", "HALLORAN, DANIEL J. (DAN), III", 50845,
+    2014, "NY", "H", 3, "G", "LALLY, GRANT M.", 74269
+  ), by = c("year", "state", "office", "dist", "type", "name_snyder"), unmatched = "error")
+
+## Governors ----
+# certified state returns: votes summed over every line, lines in printed order. NY 1990 has no official
+# source online and keeps Snyder's figures. Several races also lacked minor and write-in candidates
+# CT 1994: https://web.archive.org/web/20101007091016/http://www.sots.ct.gov/sots/lib/sots/electionservices/statementofvote_pdfs/1994_sov.pdf
+# CT 1998: https://web.archive.org/web/20250901200716/https://portal.ct.gov/sots/register-manual/section-viii---old-version/election-statistics-vote-for-governor--lt-governor--november-1998
+# CT 2002: https://web.archive.org/web/20250326205158/https://portal.ct.gov/sots/register-manual/section-viii---old-version/vote-for-governor-and-lt-governor-2002
+# CT 2006: https://web.archive.org/web/20250324090851/https://portal.ct.gov/sots/register-manual/section-viii---old-version/vote-for-governor-and-lieutenant-governor-2006
+# CT 2014: https://electionhistory.ct.gov/eng/contests/view/5743
+# CT 2018: https://electionhistory.ct.gov/eng/contests/view/3781
+# CT 2022: https://electionhistory.ct.gov/eng/contests/view/35080
+# NY 1994: https://web.archive.org/web/20120823020419/http://www.elections.ny.gov/NYSBOE/elections/1994/gov94.pdf
+# NY 1998: https://web.archive.org/web/20120823020649/http://www.elections.ny.gov/NYSBOE/elections/1998/GOVWEB.pdf
+# NY 2002: https://web.archive.org/web/20120823003957/http://www.elections.ny.gov/NYSBOE/elections/2002/general/2002_gov.pdf
+# NY 2006: https://web.archive.org/web/20120822221126/http://www.elections.ny.gov/NYSBOE/elections/2006/general/2006_gov.pdf
+# NY 2010: https://web.archive.org/web/20121004081140/http://www.elections.ny.gov/NYSBOE/elections/2010/general/2010GovernorRecertified09122012.pdf
+# NY 2014: https://web.archive.org/web/20150410011028/http://www.elections.ny.gov/NYSBOE/elections/2014/general/2014Governor.xlsx
+# NY 2018: https://web.archive.org/web/20181215022233/https://www.elections.ny.gov/NYSBOE/elections/2018/general/2018Governor.pdf
+# NY 2022: https://web.archive.org/web/20221230031610/https://www.elections.ny.gov/NYSBOE/elections/2022/General/2022CertifiedStatewideGenElectionResults.xlsx
+gov_fusion <- tribble(
+  ~year, ~state, ~name_snyder, ~party_formal, ~vote_g,
+  1994, "NY", "GOLISANO, B. THOMAS", "Independence Fusion", 217490,
+  1998, "NY", "PATAKI, GEORGE E.", "R, Conservative", 2571991,
+  1998, "NY", "VALLONE, PETER", "D, Wk Fam", 1570317,
+  2002, "CT", "ROWLAND, JOHN G.", "R", 573958,
+  2002, "CT", "CURRY, WILLIAM E., JR.", "D", 448984,
+  2002, "NY", "ARONOWITZ, STANLEY", "Grn", 41797,
+  2006, "NY", "MCMILLAN, JIMMY", "Rent 2 Damn High", 13355,
+  2010, "NY", "CUOMO, ANDREW M.", "D, I, Wk Fam", 2910876,
+  2010, "NY", "PALADINO, CARL P.", "R, Conservative, Taxp", 1547857,
+  2010, "NY", "HAWKINS, HOWIE", "Grn", 59906,
+  2010, "NY", "REDLICH, WARREN", "Lbt", 48359,
+  2010, "NY", "MCMILLAN, JIMMY", "Rent 2 Damn High", 41129,
+  2010, "NY", "BARRON, CHARLES", "Freedom", 24571,
+  2010, "NY", "DAVIS, KRISTIN M.", "Anti-Prohib", 20421,
+  2014, "CT", "MALLOY, DANNEL P. (DAN)", "D, Wk Fam", 554314,
+  2014, "CT", "FOLEY, THOMAS C. (TOM)", "R, I", 526295,
+  2014, "NY", "CUOMO, ANDREW M.", "D, Wk Fam, I, WE", 2069480,
+  2014, "NY", "ASTORINO, ROB", "R, Conservative, SCC", 1536879,
+  2014, "NY", "MCDERMOTT, MICHAEL (MIKE)", "Lbt", 16967,
+  2018, "CT", "LAMONT, EDWARD M. (NED)", "D, Wk Fam", 694510,
+  2018, "CT", "STEFANOWSKI, BOB", "R, I", 650138,
+  2018, "NY", "CUOMO, ANDREW M.", "D, Wk Fam, I, WE", 3635340,
+  2018, "NY", "MOLINARO, MARCUS J. (MARC)", "R, Conservative, Reform", 2207602,
+  2022, "CT", "LAMONT, EDWARD M. (NED)", "D, Griebel Frank for CT, Wk Fam", 710186,
+  2022, "NY", "HOCHUL, KATHLEEN COURTNEY (KATHY)", "D, Wk Fam", 3140415,
+  2022, "NY", "ZELDIN, LEE M.", "R, Conservative", 2762581
+) |>
+  mutate(office = "G", dist = NA_real_, type = "G")
+
+gov_added <- tribble(
+  ~state, ~year, ~nextup, ~party, ~party_formal, ~name_snyder, ~vote_g,
+  "CT", 1994, 1998, "I", "I", "SCOTT, THOMAS", 130128,
+  "CT", 1994, 1998, "Other", "Concerned Cit", "ZDONCZYK, JOSEPH A.", 10007,
+  "CT", 1994, 1998, "Other", "W-I", "LOOMIS, ROBERT S.", 29,
+  "CT", 1998, 2002, "Other", "Concerned Cit", "ZDONCZYK, JOSEPH A.", 8792,
+  "CT", 1998, 2002, "Lbt", "Lbt", "VARE, NED", 5637,
+  "CT", 1998, 2002, "Other", "Term Limits", "SCAGLIONE, ROBERTA M.", 2212,
+  "CT", 2002, 2006, "Other", "W-I", "GOSSELIN, PHILIP", 29,
+  "CT", 2002, 2006, "Other", "W-I", "COLONNA, WILLIAM M.", 16,
+  "CT", 2006, 2010, "Other", "W-I", "JOY, JOHN M.", 54,
+  "CT", 2018, 2022, "Other", "W-I", "WHITNUM, LEE", 74,
+  "CT", 2022, 2026, "Other", "W-I", "BICKING, MICHELLE LOUISE", 98,
+  "NY", 1998, 2002, "I", "I", "GOLISANO, B. THOMAS", 364056,
+  "NY", 1998, 2002, "Other", "Liberal", "MCCAUGHEY ROSS, ELIZABETH (BETSY)", 77915,
+  "NY", 1998, 2002, "Other", "RTL", "REYNOLDS, MICHAEL J.", 56683,
+  "NY", 1998, 2002, "Grn", "Grn", "LEWIS, AL", 52533,
+  "NY", 1998, 2002, "Other", "Marij Rfm", "LEIGHTON, THOMAS K.", 24788,
+  "NY", 1998, 2002, "Other", "Unity", "FRANCE, MARY ALICE", 9692,
+  "NY", 1998, 2002, "Lbt", "Lbt", "GARVEY, CHRISTOPHER B.", 4722,
+  "NY", 1998, 2002, "Other", "SWP", "DUNCAN, AL", 2539
+) |>
+  mutate(office = "G", dist = NA_real_, type = "G", inc = 0, w_g = 0)
+
+cand <- cand |>
+  rows_update(gov_fusion, by = c("year", "state", "office", "dist", "type", "name_snyder"), unmatched = "error") |>
+  rows_insert(gov_added, by = c("year", "state", "office", "dist", "type", "name_snyder"), conflict = "error")
+
+# 32. Write-ins ----
 # the guide excludes candidates under 10 votes; the 2020-2024 sources kept some.
 # Ohio 2024 Senate write-ins printed by the Clerk were missing
 cand <- cand |>
@@ -2449,7 +2754,7 @@ cand <- cand |>
     "OH", 2024, "S", 1, "G", 2030, "Other", "W-I", "PASTORIUS, DAVID ALLEN", 0, 13, 0
   ), by = c("year", "state", "office", "dist", "type", "name_snyder"), conflict = "error")
 
-# 32. Totals ----
+# 33. Totals ----
 
 # rows added here miss 04's runoff default for GA and LA
 cand <- cand |>
