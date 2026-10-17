@@ -9,13 +9,20 @@ cand <- read_rds("data/intermediate/candidates_1990-2024-v2.rds")
 ## Fusion party ----
 # pre-2006 Snyder rows join fusion lines into one label ("D,L", "R,C,RTL"), which 02 codes as Other
 cand <- cand |>
-  mutate(party_first = party_formal |>
-           str_split_i(",", 1) |>
-           str_trim() |>
-           party_fringeparties() |>
-           party_oneletter()) |>
-  tidylog::mutate(party = if_else(year < 2006 & str_detect(party_formal, ",") & party_first %in% c("D", "R", "I", "Lbt", "Grn"),
-                                  party_first, party)) |>
+  mutate(
+    party_first = party_formal |>
+      str_split_i(",", 1) |>
+      str_trim() |>
+      party_fringeparties() |>
+      party_oneletter()
+  ) |>
+  tidylog::mutate(
+    party = if_else(
+      year < 2006 & str_detect(party_formal, ",") & party_first %in% c("D", "R", "I", "Lbt", "Grn"),
+      party_first,
+      party
+    )
+  ) |>
   select(-party_first)
 
 ## Sanders ----
@@ -187,7 +194,7 @@ names_1990 <- tribble(
 )
 
 cand <- cand |>
-  left_join(names_1990, by = c("state", "name_snyder")) |>
+  left_join(names_1990, by = c("state", "name_snyder"), relationship = "many-to-one") |>
   tidylog::mutate(name_snyder = coalesce(name_new, name_snyder)) |>
   select(-name_new)
 
@@ -1447,13 +1454,23 @@ cand <- cand |>
 cand <- cand |>
   tidylog::mutate(
     swap = state == "ME" & office == "S" & year %in% c(2012, 2018) & name_snyder != "KING, ANGUS S., JR.",
-    year = case_when(swap & year == 2012 ~ 2018, swap & year == 2018 ~ 2012, .default = year),
+    year = case_when(
+      swap & year == 2012 ~ 2018,
+      swap & year == 2018 ~ 2012,
+      .default = year
+    ),
     nextup = if_else(swap, year + 6, nextup),
     name_snyder = replace(name_snyder, state == "ME" & name_snyder == "SUMNERS, CHARLES E., JR.", "SUMMERS, CHARLES EDWARD, JR."),
-    inc = replace(inc, state == "ME" & office == "S" & name_snyder == "KING, ANGUS S., JR." & year == 2012, 0),
-    inc = replace(inc, state == "ME" & office == "S" & name_snyder == "KING, ANGUS S., JR." & year == 2018, 1),
-    vote_g = replace(vote_g, state == "ME" & office == "S" & name_snyder == "KING, ANGUS S., JR." & year == 2012, 370580),
-    vote_g = replace(vote_g, state == "ME" & office == "S" & name_snyder == "KING, ANGUS S., JR." & year == 2018, 344575),
+    inc = case_when(
+      state == "ME" & office == "S" & name_snyder == "KING, ANGUS S., JR." & year == 2012 ~ 0,
+      state == "ME" & office == "S" & name_snyder == "KING, ANGUS S., JR." & year == 2018 ~ 1,
+      .default = inc
+    ),
+    vote_g = case_when(
+      state == "ME" & office == "S" & name_snyder == "KING, ANGUS S., JR." & year == 2012 ~ 370580,
+      state == "ME" & office == "S" & name_snyder == "KING, ANGUS S., JR." & year == 2018 ~ 344575,
+      .default = vote_g
+    ),
     dist = replace(dist, office == "S" & year == 2024 & state %in% c("ME", "VT"), 1)
   ) |>
   select(-swap)
@@ -2143,7 +2160,7 @@ cand <- cand |>
 cand <- cand |>
   tidylog::filter(!(office == "P" & name_snyder %in% c("OTHER", "SCATTERING", "NOT DESIGNATED", "NONPARTISAN",
                                                        "WORKERS WORLD", "PROHIBITION", "UNAFFILIATED"))) |>
-  tidylog::mutate(name_snyder = if_else(office == "P", case_match(
+  tidylog::mutate(name_snyder = if_else(office == "P", recode_values(
     name_snyder,
     "THE BETTER LIFE," ~ "NADER, RALPH",
     "CLINTON, BILL" ~ "CLINTON, WILLIAM J. (BILL)",
@@ -2159,7 +2176,7 @@ cand <- cand |>
     "DENNIS (DENNY\"\", LANE" ~ "LANE, DENNIS (DENNY)",
     "JADE SIMMONS" ~ "SIMMONS, JADE",
     "JACOB?FAMBRO, PRINCESS KHADIJAH MARYAM" ~ "JACOB-FAMBRO, PRINCESS KHADIJAH MARYAM",
-    .default = name_snyder
+    default = name_snyder
   ), name_snyder))
 
 # 22. Ranked-choice final rounds, 2022 and 2024 ----
@@ -2242,10 +2259,15 @@ names_same <- tribble(
   "FL", "CRAINE, NAOMI", "CRAINE, NAOMI L.")
 
 cand <- cand |>
-  left_join(names_same, by = c("state", "name_snyder")) |>
+  left_join(names_same, by = c("state", "name_snyder"), relationship = "many-to-one") |>
   tidylog::mutate(
     name_snyder = coalesce(name_new, name_snyder),
-    name_snyder = case_match(name_snyder, "ROMNEY, MITT" ~ "ROMNEY, W. MITT", "KEYES, ALAN" ~ "KEYES, ALAN L.", .default = name_snyder)
+    name_snyder = recode_values(
+      name_snyder,
+      "ROMNEY, MITT" ~ "ROMNEY, W. MITT",
+      "KEYES, ALAN" ~ "KEYES, ALAN L.",
+      default = name_snyder
+    )
   ) |>
   select(-name_new)
 
@@ -2255,7 +2277,7 @@ cand <- cand |>
   tidylog::filter(!(name_snyder %in% c("WILLOUGHBY, ", "W-I"))) |>
   tidylog::mutate(
     name_snyder = str_squish(str_replace_all(name_snyder, "’", "'")),
-    name_snyder = case_match(
+    name_snyder = recode_values(
       name_snyder,
       "CUNNINGHAM, RANDALL H. (RANDY) (DUKE)" ~ "CUNNINGHAM, RANDALL H. (DUKE)",
       "BURNS, ROBERT ()" ~ "BURNS, ROBERT",
@@ -2270,7 +2292,7 @@ cand <- cand |>
       "FERGUSON, ROBERT (BOB) W." ~ "FERGUSON, ROBERT W. (BOB)",
       "WILLIAMS, STEPHEN (STEVE) T." ~ "WILLIAMS, STEPHEN T. (STEVE)",
       "STAMPER, KATY (KATE) L." ~ "STAMPER, KATY L. (KATE)",
-      .default = name_snyder
+      default = name_snyder
     )
   )
 
@@ -2307,7 +2329,7 @@ cand <- cand |>
 # 27. Disambiguation markers ----
 # Snyder's (1)/(2) suffixes replaced by middle names from FEC filings and the Clerk, or dropped when none is on record
 cand <- cand |>
-  tidylog::mutate(name_snyder = case_match(
+  tidylog::mutate(name_snyder = recode_values(
     name_snyder,
     "WILLIAMS, WILLIAM R. (2)" ~ "WILLIAMS, WILLIAM R.",
     "DAVIS, DAVID R. (1)" ~ "DAVIS, DAVID RANDALL",
@@ -2318,7 +2340,7 @@ cand <- cand |>
     "ADAIR, ROBIN (2)" ~ "ADAIR, ROBIN",
     "WHITE, BILL (2)" ~ "WHITE, WILLIAM H. (BILL)",
     "GARZA, JULIO (1)" ~ "GARZA, JULIO",
-    .default = name_snyder
+    default = name_snyder
   ))
 
 # 28. Missing governor races ----
@@ -2414,7 +2436,7 @@ cand <- cand |>
 cand <- cand |>
   tidylog::filter(!(year == 2003 & state == "CA" & office == "G" & type == "S")) |>
   tidylog::mutate(
-    name_snyder = case_match(
+    name_snyder = recode_values(
       name_snyder,
       "FULANI, LENORA" ~ "FULANI, LENORA B.",
       "GOODE, VIRGIL HAMLIN, JR." ~ "GOODE, VIRGIL H., JR.",
@@ -2432,11 +2454,14 @@ cand <- cand |>
       "WHITE, JERRY" ~ "WHITE, JEROME S. (JERRY)",
       "HEDGES, JIM" ~ "HEDGES, JAMES (JIM)",
       "HEDGES, JAMES" ~ "HEDGES, JAMES (JIM)",
-      .default = name_snyder
+      default = name_snyder
     ),
-    name_snyder = replace(name_snyder, state == "UT" & name_snyder == "ANDERSON, ROSS CARL", "ANDERSON, ROSS CARL (ROCKY)"),
-    name_snyder = replace(name_snyder, state == "MI" & name_snyder == "WHITE, JEROME S.", "WHITE, JEROME S. (JERRY)"),
-    name_snyder = replace(name_snyder, state == "NJ" & name_snyder == "STACKHOUSE, EDWARD C.", "STACKHOUSE, EDWARD C., JR.")
+    name_snyder = case_when(
+      state == "UT" & name_snyder == "ANDERSON, ROSS CARL" ~ "ANDERSON, ROSS CARL (ROCKY)",
+      state == "MI" & name_snyder == "WHITE, JEROME S." ~ "WHITE, JEROME S. (JERRY)",
+      state == "NJ" & name_snyder == "STACKHOUSE, EDWARD C." ~ "STACKHOUSE, EDWARD C., JR.",
+      .default = name_snyder
+    )
   )
 
 # 30. Idaho Constitution/Libertarian candidate ----

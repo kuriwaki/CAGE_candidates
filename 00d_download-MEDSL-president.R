@@ -41,7 +41,7 @@ pres_dc_2020 <- tribble(
 ) |>
   mutate(year = 2020, state_po = "DC", writein = FALSE)
 
-# Recode party, variable names, etc..
+# Recode parties and names ----
 pres_fmt <- pres_raw |>
   filter(year < 2024, !(year == 2020 & state_po == "DC")) |>
   bind_rows(pres_24, pres_dc_2020) |>
@@ -49,10 +49,9 @@ pres_fmt <- pres_raw |>
   # Virginia lists Phillips/Frazier as Constitution; MEDSL labels it Conservative.
   # https://historical.elections.virginia.gov/contest/39517
   dplyr::mutate(
-    party_detailed = replace(
-      party_detailed,
-      year == 2000 & state_po == "VA" & candidate == "PHILLIPS, HOWARD",
-      "CONSTITUTION"
+    party_detailed = case_when(
+      year == 2000 & state_po == "VA" & candidate == "PHILLIPS, HOWARD" ~ "CONSTITUTION",
+      .default = party_detailed
     )
   ) |>
   dplyr::transmute(
@@ -60,37 +59,60 @@ pres_fmt <- pres_raw |>
     state = state_po,
     candidate,
     writein,
-    party = recode(party_simplified, REPUBLICAN = "R", DEMOCRAT = "D", LIBERTARIAN = "Lbt", GREEN = "Grn", OTHER = "Other"),
-    party_formal = recode(str_to_title(party_detailed), Republican = "R", Democrat = "D", Libertarian = "Lbt", Green = "Grn"),
+    party = recode_values(
+      party_simplified,
+      "REPUBLICAN" ~ "R",
+      "DEMOCRAT" ~ "D",
+      "LIBERTARIAN" ~ "Lbt",
+      "GREEN" ~ "Grn",
+      "OTHER" ~ "Other",
+      default = party_simplified
+    ),
+    party_formal = recode_values(
+      str_to_title(party_detailed),
+      "Republican" ~ "R",
+      "Democrat" ~ "D",
+      "Libertarian" ~ "Lbt",
+      "Green" ~ "Grn",
+      default = str_to_title(party_detailed)
+    ),
     candidatevotes
   ) |>
   tidylog::mutate(
-    party = replace(party, party_formal == "Working Families", "D"),
-    party = replace(party, party_formal == "Women's Equality" & state == "NY", "D"),
-    party = replace(party, party_formal == "Independence" & state == "NY" & year %in% c(2008), "R"),
-    party = replace(party, party_formal == "Independence" & state == "NY" & year %in% c(2016), "Lbt"),
-    party = replace(party, party_formal == "Conservative" & state == "NY", "R")) |>
+    party = case_when(
+      party_formal == "Working Families" ~ "D",
+      party_formal == "Women's Equality" & state == "NY" ~ "D",
+      party_formal == "Independence" & state == "NY" & year == 2008 ~ "R",
+      party_formal == "Independence" & state == "NY" & year == 2016 ~ "Lbt",
+      party_formal == "Conservative" & state == "NY" ~ "R",
+      .default = party
+    )
+  ) |>
   tidylog::mutate(
-    # writins
-    party = replace(party, (writein), "W-I"),
-    candidate = replace(candidate, writein, "W-I"),
-    party_formal = replace(party_formal, writein, NA_character_),
-    party_formal = replace(party_formal, party_formal == "Democratic", "D"),
-    party_formal = replace(party_formal, party_formal == "Dfl", "DFL"),
-    name = recode(
+    # Write-ins
+    party = case_when(writein ~ "W-I", .default = party),
+    candidate = case_when(writein ~ "W-I", .default = candidate),
+    party_formal = case_when(
+      writein ~ NA_character_,
+      party_formal == "Democratic" ~ "D",
+      party_formal == "Dfl" ~ "DFL",
+      .default = party_formal
+    ),
+    name = recode_values(
       candidate,
-      `OBAMA, BARACK H.` = "OBAMA, BARACK",
-      `CLINTON, HILLARY` = "CLINTON, HILLARY RODHAM",
-      `BIDEN, JOSEPH R. JR` = "BIDEN, JOSEPH R., JR.",
-      `MCCAIN, JOHN` = "MCCAIN, JOHN S.",
-      `PAUL, RONALD \"\"RON\"\"` = "PAUL, RONALD E. (RON)",
+      "OBAMA, BARACK H." ~ "OBAMA, BARACK",
+      "CLINTON, HILLARY" ~ "CLINTON, HILLARY RODHAM",
+      "BIDEN, JOSEPH R. JR" ~ "BIDEN, JOSEPH R., JR.",
+      "MCCAIN, JOHN" ~ "MCCAIN, JOHN S.",
+      'PAUL, RONALD ""RON""' ~ "PAUL, RONALD E. (RON)",
+      default = candidate
     ),
     name = str_replace(name, "\"{1,}$", ")"),
     name = str_replace(name, "\\s\"{1,}", " ("),
     inc = case_when(
       str_detect(name, "OBAMA") & year == 2012 ~ 1,
       str_detect(name, "TRUMP") & year == 2020 ~ 1,
-      TRUE ~ 0
+      .default = 0
     )
   ) |>
   select(-writein, -candidate) |>
@@ -100,15 +122,15 @@ pres_fmt <- pres_raw |>
            inc,
            candidatevotes)
 
-# collapse fusion
+# Collapse fusion ----
 pres_fmt2 <- pres_fmt |>
   summarize(
     party_formal = str_c(as.character(party_formal), collapse = ", "),
     candidatevotes = sum(candidatevotes, na.rm = TRUE),
     .by = c(year, state, party, name, inc)
-    )
+  )
 
-# drop
+# Select candidates ----
 # - candidates with less than 10 votes
 # - blank votes, overvotes, scatterings, etc..
 pres_sel <- pres_fmt2 |>
