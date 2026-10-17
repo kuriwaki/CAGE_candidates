@@ -1,4 +1,4 @@
-# functions ---
+# Formatting functions ----
 
 #' write with comma and percentage point
 
@@ -16,6 +16,23 @@ fmt_xtab <- function(xtbl, name, long = FALSE, rowname = "year") {
   tab |>
   str_replace("XXXXX", name) |>
     str_replace("rowname", rowname)
+}
+
+# Next election years ----
+fmt_nextup <- function(xtbl) {
+  as.data.frame(xtbl, responseName = "n") |>
+    as_tibble() |>
+    arrange(year, nextup) |>
+    mutate(entry = glue::glue("{nextup} ({scales::comma(n)})")) |>
+    summarize(nextup = str_c(entry[n > 0], collapse = ", "), .by = year) |>
+    kable(
+      format = "latex",
+      booktabs = TRUE,
+      col.names = c("year", "nextup (candidate count)"),
+      align = c("l", "l"),
+      linesep = ""
+    ) |>
+    kable_styling(position = "center")
 }
 
 wri_xtab <- function(tbl, name, dir = "guide/Tables/cands") {
