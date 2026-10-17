@@ -286,7 +286,7 @@ test_that("05 validates before replacing the release", {
   file.copy(file.path(project_dir, "00e_check-functions.R"), workspace)
 
   raw_house <- valid_race |>
-    mutate(nextup = 2025, inc = 0, runoff = 0) |>
+    mutate(nextup = 2025, inc = if_else(party == "D", 1, 0), runoff = 0) |>
     rename(vote_g = candidatevotes, w_g = won)
   raw_presidents <- crossing(
     year = seq(1992, 2024, by = 4), state = c(state.abb, "DC"), party = c("D", "R")
@@ -301,8 +301,10 @@ test_that("05 validates before replacing the release", {
     mutate(party = if_else(office == "H", "INVALID", party))
   input <- file.path(workspace, "data", "intermediate", "candidates_1990-2024.rds")
   output <- file.path(workspace, "release", "candidates_1990-2024.dta")
+  contest_output <- file.path(workspace, "release", "candidates_1990-2024-by-contest.dta")
   write_rds(bad_raw, input)
   write_lines("Existing release must survive failed validation", output)
+  write_lines("Existing contest release must survive failed validation", contest_output)
 
   withr::with_dir(workspace, {
     expect_error(
@@ -311,6 +313,7 @@ test_that("05 validates before replacing the release", {
     )
   })
   expect_equal(read_lines(output), "Existing release must survive failed validation")
+  expect_equal(read_lines(contest_output), "Existing contest release must survive failed validation")
 
   bad_presidents <- raw |>
     filter(!(office == "P" & year == 2024 & state == "DC" & party == "R"))
@@ -322,6 +325,7 @@ test_that("05 validates before replacing the release", {
     )
   })
   expect_equal(read_lines(output), "Existing release must survive failed validation")
+  expect_equal(read_lines(contest_output), "Existing contest release must survive failed validation")
 
   write_rds(raw, input)
   withr::with_dir(workspace, {
@@ -338,6 +342,40 @@ test_that("05 validates before replacing the release", {
     select(all_of(names(valid_race))) |>
     mutate(across(everything(), as.vector))
   expect_equal(saved, valid_race)
+
+  contests_labelled <- haven::read_dta(contest_output)
+  expect_true(all(map_lgl(contests_labelled, \(column) !is.null(attr(column, "label")))))
+  contests <- contests_labelled |>
+    haven::zap_labels() |>
+    mutate(across(everything(), as.vector))
+  expect_named(contests, c(
+    "year", "state", "office", "dist", "type", "name_snyder_D", "name_snyder_R",
+    "inc_D", "inc_R", "candidatevotes_D", "candidatevotes_R", "share_D_twoparty"
+  ))
+  expect_equal(nrow(contests), 460)
+  expect_equal(nrow(distinct(contests, year, state, office, dist, type)), 460)
+  expect_equal(
+    contests |> select(year, office),
+    contests |> arrange(desc(year), desc(office)) |> select(year, office)
+  )
+  house_contest <- contests |>
+    filter(office == "H")
+  expect_equal(house_contest$year, 2023)
+  expect_equal(house_contest$state, "AZ")
+  expect_equal(house_contest$dist, 1)
+  expect_equal(house_contest$type, "G")
+  expect_equal(house_contest$name_snyder_D, "SMITH, JANE")
+  expect_equal(house_contest$name_snyder_R, "JONES, JOHN")
+  expect_equal(house_contest$inc_D, 1)
+  expect_equal(house_contest$inc_R, 0)
+  expect_equal(house_contest$candidatevotes_D, 60)
+  expect_equal(house_contest$candidatevotes_R, 40)
+  expect_equal(house_contest$share_D_twoparty, 0.6)
+  presidential_contests <- contests |>
+    filter(office == "P")
+  expect_equal(nrow(presidential_contests), 459)
+  expect_true(all(is.na(presidential_contests$dist)))
+  expect_equal(presidential_contests$share_D_twoparty, rep(0.5, 459))
 
   bad_saved_presidents <- haven::read_dta(output) |>
     filter(!(office == "P" & year == 2024 & state == "DC" & party == "R"))
