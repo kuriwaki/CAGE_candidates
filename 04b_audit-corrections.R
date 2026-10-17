@@ -644,19 +644,24 @@ adds_1996 <- tribble(
 cand <- cand |>
   rows_insert(adds_1996, by = c("year", "state", "office", "dist", "type", "name_snyder"), conflict = "error")
 
-## Texas runoffs ----
-# court-ordered open elections (type S); TX-8, 9 and 25 were decided in the Dec 10 runoff. Clerk figures,
-# since the SOS tabulation is unofficial
+## Texas general elections and runoffs ----
+# TX's 13 court-ordered 1996 elections filled full terms: code G, retaining December runoff flags.
+# Clerk figures for the Dec 10 runoffs in TX-8, 9 and 25; the SOS tabulation is unofficial.
 cand <- cand |>
+  mutate(type = case_when(
+    year == 1996 & state == "TX" & office == "H" &
+      dist %in% c(3, 5, 6, 7, 8, 9, 18, 22, 24, 25, 26, 29, 30) ~ "G",
+    .default = type
+  )) |>
   tidylog::filter(!(year == 1996 & state == "TX" & office == "H" & dist %in% c(8, 9, 25))) |>
   bind_rows(tribble(
     ~state, ~year, ~office, ~dist, ~type, ~nextup, ~party, ~party_formal, ~name_snyder, ~inc, ~vote_g, ~w_g, ~runoff,
-    "TX", 1996, "H", 8, "S", 1998, "R", "R", "BRADY, KEVIN P.", 0, 30366, 1, 1,
-    "TX", 1996, "H", 8, "S", 1998, "R", "R", "FONTENOT, EUGENE J. (GENE)", 0, 21004, 0, 1,
-    "TX", 1996, "H", 9, "S", 1998, "D", "D", "LAMPSON, NICHOLAS V. (NICK)", 0, 59225, 1, 1,
-    "TX", 1996, "H", 9, "S", 1998, "R", "R", "STOCKMAN, STEPHEN E. (STEVE)", 1, 52870, 0, 1,
-    "TX", 1996, "H", 25, "S", 1998, "D", "D", "BENTSEN, KENNETH E. (KEN)", 1, 29396, 1, 1,
-    "TX", 1996, "H", 25, "S", 1998, "R", "R", "MCKENNA, DOLLY MADISON", 0, 21892, 0, 1
+    "TX", 1996, "H", 8, "G", 1998, "R", "R", "BRADY, KEVIN P.", 0, 30366, 1, 1,
+    "TX", 1996, "H", 8, "G", 1998, "R", "R", "FONTENOT, EUGENE J. (GENE)", 0, 21004, 0, 1,
+    "TX", 1996, "H", 9, "G", 1998, "D", "D", "LAMPSON, NICHOLAS V. (NICK)", 0, 59225, 1, 1,
+    "TX", 1996, "H", 9, "G", 1998, "R", "R", "STOCKMAN, STEPHEN E. (STEVE)", 1, 52870, 0, 1,
+    "TX", 1996, "H", 25, "G", 1998, "D", "D", "BENTSEN, KENNETH E. (KEN)", 1, 29396, 1, 1,
+    "TX", 1996, "H", 25, "G", 1998, "R", "R", "MCKENNA, DOLLY MADISON", 0, 21892, 0, 1
   ))
 
 ## Louisiana ----

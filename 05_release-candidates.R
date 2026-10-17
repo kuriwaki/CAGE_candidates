@@ -2,6 +2,8 @@ library(tidyverse)
 library(haven)
 library(fs)
 
+source("00e_check-functions.R")
+
 #' function to add labels
 paste_labels <- function(tbl, lab_df = var_labels) {
   stopifnot(all(!duplicated(var_labels$alias)))
@@ -30,6 +32,9 @@ cand <- cand_raw |>
   rename(candidatevotes = vote_g,
          won = w_g) |>
   select(!!!order_candvars)
+
+# Validate before saving the release ----
+check_candidates(cand)
 
 # what are the columns -----
 

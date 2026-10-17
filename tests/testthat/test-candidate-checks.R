@@ -1,0 +1,254 @@
+# Written by Codex
+
+library(tidyverse)
+source("../../00e_check-functions.R")
+
+# An odd-year race keeps national election totals out of these unit tests.
+valid_race <- tibble(
+  year = 2023, state = "AZ", office = "H", dist = 1, type = "G",
+  name_snyder = c("SMITH, JANE", "JONES, JOHN"),
+  party = c("D", "R"), party_formal = c("D", "R"),
+  candidatevotes = c(60, 40), totalvotes = 100, won = c(1, 0)
+)
+
+# Synthetic national totals keep these tests independent of the released data.
+regular_elections <- function(year, house = 435, senate = if (year %% 6 == 0) 34 else 33) {
+  senate_class <- case_when(
+    year %% 6 == 2 ~ 1,
+    year %% 6 == 4 ~ 2,
+    year %% 6 == 0 ~ 3
+  )
+  bind_rows(
+    tibble(state = "AZ", office = "H", dist = seq_len(house)),
+    tibble(state = state.abb[seq_len(senate)], office = "S", dist = senate_class)
+  ) |>
+    mutate(
+      year = year, type = "G", name_snyder = "SMITH, JANE",
+      party = "D", party_formal = "D", candidatevotes = 100, totalvotes = 100, won = 1
+    )
+}
+
+test_that("valid races pass, including unreported uncontested votes", {
+  expect_no_error(check_candidates(valid_race))
+  unreported <- valid_race |>
+    slice(1) |>
+    mutate(candidatevotes = NA_real_, totalvotes = NA_real_)
+  expect_no_warning(check_candidates(unreported))
+})
+
+test_that("presidential rows remain excluded", {
+  presidential <- valid_race |>
+    mutate(office = "P", party = "INVALID", candidatevotes = -1)
+  expect_no_error(check_candidates(bind_rows(valid_race, presidential)))
+  expect_error(check_candidates(slice_head(valid_race, n = 0)),
+               class = "cage_validation_error")
+})
+
+test_that("each enforced check rejects the relevant bad data", {
+  bad_data <- list(
+    "Missing or invalid candidate identifiers" = valid_race |>
+      mutate(name_snyder = NA_character_),
+    "Duplicate candidates within a race" = bind_rows(valid_race, slice(valid_race, 2)),
+    "Invalid or missing winner indicators" = valid_race |>
+      mutate(won = NA_real_),
+    "Races with an unexpected number of winners" = valid_race |>
+      mutate(won = 1),
+    "Winners with fewer votes than another candidate" = valid_race |>
+      mutate(won = 1 - won),
+    "Invalid vote counts" = valid_race |>
+      mutate(candidatevotes = -candidatevotes),
+    "Race totals inconsistent with candidate votes" = valid_race |>
+      mutate(totalvotes = 101),
+    "Invalid party codes" = valid_race |>
+      mutate(party = NA_character_),
+    "Inconsistent short and formal parties" = valid_race |>
+      mutate(party_formal = "R")
+  )
+
+  iwalk(bad_data, \(data, check) {
+    error <- tryCatch(check_candidates(data), cage_validation_error = identity)
+    expect_s3_class(error, "cage_validation_error")
+    expect_true(check %in% names(error$checks), info = check)
+  })
+})
+
+test_that("multiple failures are reported together", {
+  bad_race <- valid_race |>
+    mutate(party = "INVALID", totalvotes = 101)
+  error <- tryCatch(check_candidates(bad_race), cage_validation_error = identity)
+  expect_setequal(names(error$checks), c(
+    "Invalid party codes", "Race totals inconsistent with candidate votes"
+  ))
+})
+
+test_that("missing vote totals and non-finite vote counts are errors", {
+  expect_error(
+    check_candidates(mutate(valid_race, totalvotes = NA_real_)),
+    class = "cage_validation_error"
+  )
+  expect_error(
+    check_candidates(mutate(valid_race, candidatevotes = Inf, totalvotes = Inf)),
+    class = "cage_validation_error"
+  )
+})
+
+test_that("the NC-09 exception is limited to the uncertified 2018 election", {
+  nc_2018 <- valid_race |>
+    mutate(year = 2018, state = "NC", dist = 9, won = NA_real_)
+  error <- tryCatch(check_candidates(nc_2018), cage_validation_error = identity)
+  expect_s3_class(error, "cage_validation_error")
+  expect_false("Invalid or missing winner indicators" %in% names(error$checks))
+  expect_false("Races with an unexpected number of winners" %in% names(error$checks))
+  expect_true("House general election winners (435; 434 in 2018)" %in% names(error$checks))
+  expect_error(
+    check_candidates(mutate(nc_2018, year = 2023)),
+    class = "cage_validation_error"
+  )
+  expect_error(
+    suppressWarnings(check_candidates(mutate(nc_2018, won = c(1, 0)))),
+    class = "cage_validation_error"
+  )
+})
+
+test_that("governor counts, unusual names and turnout remain advisory", {
+  governor <- valid_race |>
+    mutate(year = 2024, office = "G", dist = NA_real_)
+  expect_warning(
+    check_candidates(bind_rows(regular_elections(2024), governor)),
+    class = "cage_validation_warning"
+  )
+  expect_warning(
+    check_candidates(mutate(valid_race, name_snyder = str_to_lower(name_snyder))),
+    class = "cage_validation_warning"
+  )
+  turnout <- map_dfr(1:3, \(district) {
+    valid_race |>
+      mutate(
+        dist = district,
+        candidatevotes = candidatevotes * if_else(district == 3, 10, 1),
+        totalvotes = totalvotes * if_else(district == 3, 10, 1)
+      )
+  })
+  expect_warning(check_candidates(turnout), class = "cage_validation_warning")
+})
+
+test_that("House general elections require exactly 435 winners", {
+  expect_no_warning(check_candidates(regular_elections(2024)))
+  walk(c(434, 436), \(n_winners) {
+    error <- tryCatch(
+      check_candidates(regular_elections(2024, house = n_winners)),
+      cage_validation_error = identity
+    )
+    expect_s3_class(error, "cage_validation_error")
+    expect_named(error$checks, "House general election winners (435; 434 in 2018)")
+    expect_equal(error$checks[[1]]$winners, n_winners)
+    expect_equal(error$checks[[1]]$expected, 435)
+  })
+})
+
+test_that("the 434-winner House exception applies only to 2018", {
+  expect_no_warning(check_candidates(regular_elections(2018, house = 434)))
+  error <- tryCatch(
+    check_candidates(regular_elections(2018, house = 435)),
+    cage_validation_error = identity
+  )
+  expect_named(error$checks, "House general election winners (435; 434 in 2018)")
+  expect_equal(error$checks[[1]]$expected, 434)
+  expect_error(
+    check_candidates(regular_elections(2016, house = 434)),
+    class = "cage_validation_error"
+  )
+})
+
+test_that("Senate winner totals depend on the scheduled class", {
+  walk(c(2020, 2022, 2024), \(election_year) {
+    expect_no_warning(check_candidates(regular_elections(election_year)))
+    wrong_total <- if (election_year == 2022) 33 else 34
+    error <- tryCatch(
+      check_candidates(regular_elections(election_year, senate = wrong_total)),
+      cage_validation_error = identity
+    )
+    expect_s3_class(error, "cage_validation_error")
+    expect_named(error$checks, "Senate general election winners (33 or 34 by class)")
+    expect_equal(error$checks[[1]]$senate_class,
+                 c(`2020` = 2, `2022` = 3, `2024` = 1)[[as.character(election_year)]])
+    expect_equal(error$checks[[1]]$expected, if (election_year == 2022) 34 else 33)
+  })
+})
+
+test_that("missing offices and all-special elections do not bypass national counts", {
+  general <- regular_elections(2024)
+  missing_senate <- general |>
+    filter(office != "S")
+  error <- tryCatch(check_candidates(missing_senate), cage_validation_error = identity)
+  expect_named(error$checks, "Senate general election winners (33 or 34 by class)")
+  expect_equal(error$checks[[1]]$winners, 0)
+  expect_error(
+    check_candidates(mutate(general, type = "S")),
+    class = "cage_validation_error"
+  )
+})
+
+test_that("special election winners do not increase general election totals", {
+  general <- regular_elections(2024)
+  special <- general |>
+    slice(1, n()) |>
+    mutate(type = "S")
+  expect_no_warning(check_candidates(bind_rows(general, special)))
+})
+
+test_that("every check is listed with its pass or fail symbol", {
+  withr::local_options(list(cli.unicode = TRUE, cli.num_colors = 1, cli.width = 200))
+  passed <- capture_messages(check_candidates(valid_race))
+  expect_true(any(str_detect(passed, "✔.*Invalid party codes: passed")))
+  expect_true(any(str_detect(passed, "✔.*House general election winners.*passed")))
+  expect_true(any(str_detect(passed, "✔.*Unusually high turnout: passed")))
+
+  failed <- capture_messages(
+    expect_error(check_candidates(mutate(valid_race, party = "INVALID")),
+                 class = "cage_validation_error")
+  )
+  expect_true(any(str_detect(failed, "✖.*Invalid party codes: failed")))
+  expect_true(any(str_detect(failed, "✔.*Invalid vote counts: passed")))
+})
+
+test_that("05 validates before replacing the release", {
+  project_dir <- normalizePath("../..")
+  workspace <- withr::local_tempdir()
+  dir.create(file.path(workspace, "data", "intermediate"), recursive = TRUE)
+  dir.create(file.path(workspace, "release"))
+  file.copy(file.path(project_dir, "00e_check-functions.R"), workspace)
+
+  raw <- valid_race |>
+    mutate(nextup = 2025, inc = 0, runoff = 0) |>
+    rename(vote_g = candidatevotes, w_g = won)
+  bad_raw <- raw |>
+    mutate(party = "INVALID")
+  input <- file.path(workspace, "data", "intermediate", "candidates_1990-2024.rds")
+  output <- file.path(workspace, "release", "candidates_1990-2024.dta")
+  write_rds(bad_raw, input)
+  write_lines("Existing release must survive failed validation", output)
+
+  withr::with_dir(workspace, {
+    expect_error(
+      source(file.path(project_dir, "05_release-candidates.R"), local = new.env()),
+      class = "cage_validation_error"
+    )
+  })
+  expect_equal(read_lines(output), "Existing release must survive failed validation")
+
+  write_rds(raw, input)
+  withr::with_dir(workspace, {
+    expect_no_error(
+      source(file.path(project_dir, "05_release-candidates.R"), local = new.env())
+    )
+    expect_no_error(
+      source(file.path(project_dir, "07_checks.R"), local = new.env())
+    )
+  })
+  saved <- haven::read_dta(output) |>
+    haven::zap_labels() |>
+    select(all_of(names(valid_race))) |>
+    mutate(across(everything(), as.vector))
+  expect_equal(saved, valid_race)
+})
