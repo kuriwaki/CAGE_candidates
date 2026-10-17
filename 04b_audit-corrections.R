@@ -1569,7 +1569,7 @@ cand <- cand |>
 cand <- cand |>
   rows_update(tribble(
     ~year, ~state, ~office, ~dist, ~type, ~name_snyder, ~vote_g,
-    2010, "AK", "S", 2, "G", "MILLER, JOE", 90839   # p. 3
+    2010, "AK", "S", 3, "G", "MILLER, JOE", 90839   # p. 3
   ), by = c("year", "state", "office", "dist", "type", "name_snyder"), unmatched = "error")
 
 ## Candidates missing from Snyder ----

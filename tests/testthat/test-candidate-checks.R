@@ -176,6 +176,72 @@ test_that("Senate winner totals depend on the scheduled class", {
   })
 })
 
+test_that("Senate general election candidates require the scheduled race class", {
+  general <- regular_elections(2024)
+  walk(c(2, 999, NA_real_), \(wrong_class) {
+    wrong_class_data <- general |>
+      mutate(dist = if_else(office == "S" & state == "AZ", wrong_class, dist))
+    error <- tryCatch(check_candidates(wrong_class_data), cage_validation_error = identity)
+    expect_s3_class(error, "cage_validation_error")
+    expect_true("Senate general election race classes" %in% names(error$checks))
+    expect_false("Senate general election winners (33 or 34 by class)" %in% names(error$checks))
+    expect_equal(error$checks[["Senate general election race classes"]]$state, "AZ")
+  })
+})
+
+test_that("Senate race classes are checked for losing candidates too", {
+  general <- regular_elections(2024)
+  wrong_class_loser <- general |>
+    filter(office == "S", state == "AZ") |>
+    mutate(dist = 2, name_snyder = "JONES, JOHN", candidatevotes = 40, totalvotes = 40, won = 0)
+  error <- tryCatch(
+    check_candidates(bind_rows(general, wrong_class_loser)),
+    cage_validation_error = identity
+  )
+  expect_s3_class(error, "cage_validation_error")
+  expect_true("Senate general election race classes" %in% names(error$checks))
+  expect_false("Senate general election winners (33 or 34 by class)" %in% names(error$checks))
+  expect_equal(error$checks[["Senate general election race classes"]]$state, "AZ")
+  expect_equal(error$checks[["Senate general election race classes"]]$dist, 2)
+  expect_equal(error$checks[["Senate general election race classes"]]$winners, 0)
+})
+
+test_that("the Alaska 2010 and Louisiana 2020 class errors are rejected", {
+  cases <- tribble(
+    ~election_year, ~race_state, ~wrong_class,
+    2010, "AK", 2,
+    2020, "LA", 1
+  )
+  pwalk(cases, \(election_year, race_state, wrong_class) {
+    wrong_class_data <- regular_elections(election_year) |>
+      mutate(dist = if_else(office == "S" & state == race_state, wrong_class, dist))
+    error <- tryCatch(check_candidates(wrong_class_data), cage_validation_error = identity)
+    expect_s3_class(error, "cage_validation_error")
+    expect_named(error$checks, "Senate general election race classes")
+    expect_equal(error$checks[[1]]$state, race_state)
+    expect_equal(error$checks[[1]]$year, election_year)
+    expect_no_warning(check_candidates(regular_elections(election_year)))
+  })
+})
+
+test_that("off-cycle Senate classes are allowed only for special elections", {
+  general <- regular_elections(2024)
+  special <- general |>
+    filter(office == "S", state == "AZ") |>
+    mutate(type = "S", dist = 2)
+  expect_no_warning(check_candidates(bind_rows(general, special)))
+
+  odd_year_special <- special |>
+    mutate(year = 2023)
+  expect_no_warning(check_candidates(bind_rows(valid_race, odd_year_special)))
+
+  odd_year_general <- odd_year_special |>
+    mutate(type = "G")
+  error <- tryCatch(check_candidates(odd_year_general), cage_validation_error = identity)
+  expect_s3_class(error, "cage_validation_error")
+  expect_named(error$checks, "Senate general election race classes")
+})
+
 test_that("missing offices and all-special elections do not bypass national counts", {
   general <- regular_elections(2024)
   missing_senate <- general |>

@@ -334,21 +334,21 @@ jsdat <- jsdat |>
 louisiana_senate_2020 <- tibble::tribble(
   ~state, ~year, ~office, ~dist, ~type, ~nextup, ~party, ~party_formal, ~name_snyder, ~inc, ~vote_g, ~w_g,
   # 2020 Senate election
-  "LA", 2020, "S", 1, "G", 2026, "R", "R", "CASSIDY, WILLIAM (BILL)", 1, 1228908, 1,
-  "LA", 2020, "S", 1, "G", 2026, "D", "D", "PERKINS, ADRIAN", 0, 394049, 0,
-  "LA", 2020, "S", 1, "G", 2026, "D", "D", "EDWARDS, DERRICK (CHAMP)", 0, 229814, 0,
-  "LA", 2020, "S", 1, "G", 2026, "D", "D", "PIERCE, ANTOINE", 0, 55710, 0,
-  "LA", 2020, "S", 1, "G", 2026, "R", "R", "MURPHY, DUSTIN", 0, 38383, 0,
-  "LA", 2020, "S", 1, "G", 2026, "D", "D", "KNIGHT, DAVID DREW", 0, 36962, 0,
-  "LA", 2020, "S", 1, "G", 2026, "I", "I", "BILLIOT, BERYL", 0, 17362, 0,
-  "LA", 2020, "S", 1, "G", 2026, "I", "I", "BOURGEOIS, JOHN PAUL", 0, 16518, 0,
-  "LA", 2020, "S", 1, "G", 2026, "D", "D", "WENSTRUP, PETER", 0, 14454, 0,
-  "LA", 2020, "S", 1, "G", 2026, "L", "L", "SIGLER, AARON C.", 0, 11321, 0,
-  "LA", 2020, "S", 1, "G", 2026, "I", "I", "MENDOZA, MANILLO V. (VINNY)", 0, 7811, 0,
-  "LA", 2020, "S", 1, "G", 2026, "Other", "Other", "PRICE, MELINDA MARY", 0, 7680, 0,
-  "LA", 2020, "S", 1, "G", 2026, "I", "I", "MONTGOMERY, JAMAR", 0, 5804, 0,
-  "LA", 2020, "S", 1, "G", 2026, "I", "I", "DARET, RENO JEAN, III", 0, 3954, 0,
-  "LA", 2020, "S", 1, "G", 2026, "Other", "Other", "JOHN, XAN", 0, 2813, 0
+  "LA", 2020, "S", 2, "G", 2026, "R", "R", "CASSIDY, WILLIAM (BILL)", 1, 1228908, 1,
+  "LA", 2020, "S", 2, "G", 2026, "D", "D", "PERKINS, ADRIAN", 0, 394049, 0,
+  "LA", 2020, "S", 2, "G", 2026, "D", "D", "EDWARDS, DERRICK (CHAMP)", 0, 229814, 0,
+  "LA", 2020, "S", 2, "G", 2026, "D", "D", "PIERCE, ANTOINE", 0, 55710, 0,
+  "LA", 2020, "S", 2, "G", 2026, "R", "R", "MURPHY, DUSTIN", 0, 38383, 0,
+  "LA", 2020, "S", 2, "G", 2026, "D", "D", "KNIGHT, DAVID DREW", 0, 36962, 0,
+  "LA", 2020, "S", 2, "G", 2026, "I", "I", "BILLIOT, BERYL", 0, 17362, 0,
+  "LA", 2020, "S", 2, "G", 2026, "I", "I", "BOURGEOIS, JOHN PAUL", 0, 16518, 0,
+  "LA", 2020, "S", 2, "G", 2026, "D", "D", "WENSTRUP, PETER", 0, 14454, 0,
+  "LA", 2020, "S", 2, "G", 2026, "L", "L", "SIGLER, AARON C.", 0, 11321, 0,
+  "LA", 2020, "S", 2, "G", 2026, "I", "I", "MENDOZA, MANILLO V. (VINNY)", 0, 7811, 0,
+  "LA", 2020, "S", 2, "G", 2026, "Other", "Other", "PRICE, MELINDA MARY", 0, 7680, 0,
+  "LA", 2020, "S", 2, "G", 2026, "I", "I", "MONTGOMERY, JAMAR", 0, 5804, 0,
+  "LA", 2020, "S", 2, "G", 2026, "I", "I", "DARET, RENO JEAN, III", 0, 3954, 0,
+  "LA", 2020, "S", 2, "G", 2026, "Other", "Other", "JOHN, XAN", 0, 2813, 0
 )
 
 
@@ -493,12 +493,12 @@ jsdat <- add_rows_if_new(jsdat, la_additions)
 
 alaska_senate_2010 <- tibble::tribble(
   ~state, ~year, ~office, ~dist, ~type, ~nextup, ~party, ~party_formal, ~name_snyder, ~inc, ~vote_g, ~w_g,
-  "AK", 2010, "S", 2, "G", 2016, "Other", "W-I", "MURKOWSKI, LISA ANN", 1, 101091, 1,
-  "AK", 2010, "S", 2, "G", 2016, "R", "R", "MILLER, JOE", 0, 90860, 0,
-  "AK", 2010, "S", 2, "G", 2016, "D", "D", "MCADAMS, SCOTT T.", 0, 60045, 0,
-  "AK", 2010, "S", 2, "G", 2016, "Lbt", "Lbt", "HAASE, FREDRICK (DAVID)", 0, 1459, 0,
-  "AK", 2010, "S", 2, "G", 2016, "I", "Nonaffiliated", "CARTER, TIM", 0, 927, 0,
-  "AK", 2010, "S", 2, "G", 2016, "I", "Nonaffiliated", "GIANOUTSOS, TED", 0, 458, 0
+  "AK", 2010, "S", 3, "G", 2016, "Other", "W-I", "MURKOWSKI, LISA ANN", 1, 101091, 1,
+  "AK", 2010, "S", 3, "G", 2016, "R", "R", "MILLER, JOE", 0, 90860, 0,
+  "AK", 2010, "S", 3, "G", 2016, "D", "D", "MCADAMS, SCOTT T.", 0, 60045, 0,
+  "AK", 2010, "S", 3, "G", 2016, "Lbt", "Lbt", "HAASE, FREDRICK (DAVID)", 0, 1459, 0,
+  "AK", 2010, "S", 3, "G", 2016, "I", "Nonaffiliated", "CARTER, TIM", 0, 927, 0,
+  "AK", 2010, "S", 3, "G", 2016, "I", "Nonaffiliated", "GIANOUTSOS, TED", 0, 458, 0
 )
 
 jsdat <- add_rows_if_new(jsdat, alaska_senate_2010)

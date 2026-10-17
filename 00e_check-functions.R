@@ -1,5 +1,14 @@
 # Written by Codex
 
+# Senate election calendar ----
+scheduled_senate_class <- function(year) {
+  case_when(
+    year %% 6 == 2 ~ 1,
+    year %% 6 == 4 ~ 2,
+    year %% 6 == 0 ~ 3
+  )
+}
+
 # Candidate validation ----
 # Used by 05 before saving and by 07 to check the saved release.
 check_candidates <- function(cand_raw) {
@@ -55,6 +64,12 @@ check_candidates <- function(cand_raw) {
   winner_votes <- races |>
     filter(is.finite(winner_votes), winner_votes < top)
 
+  senate_classes <- races |>
+    filter(office == "S", type == "G") |>
+    mutate(expected_class = scheduled_senate_class(year)) |>
+    filter(is.na(expected_class) | is.na(dist) | dist != expected_class) |>
+    select(year, state, dist, expected_class, winners)
+
   invalid_votes <- cand |>
     filter(
       candidatevotes < 0 | totalvotes < 0 | candidatevotes > totalvotes |
@@ -91,11 +106,7 @@ check_candidates <- function(cand_raw) {
     filter(year %% 2 == 0) |>
     crossing(office = c("H", "S")) |>
     mutate(
-      senate_class = case_when(
-        office == "S" & year %% 6 == 2 ~ 1,
-        office == "S" & year %% 6 == 4 ~ 2,
-        office == "S" & year %% 6 == 0 ~ 3
-      ),
+      senate_class = if_else(office == "S", scheduled_senate_class(year), NA_real_),
       expected = case_when(
         # Handcoded exception: NC-09's 2018 election had no certified winner.
         office == "H" & year == 2018 ~ 434,
@@ -131,6 +142,7 @@ check_candidates <- function(cand_raw) {
     "Invalid party codes" = invalid_parties,
     "Inconsistent short and formal parties" = inconsistent_parties,
     "House general election winners (435; 434 in 2018)" = house_counts,
+    "Senate general election race classes" = senate_classes,
     "Senate general election winners (33 or 34 by class)" = senate_counts
   )
 
