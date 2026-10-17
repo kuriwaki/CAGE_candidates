@@ -2296,7 +2296,6 @@ cand <- cand |>
     party == "Other" & first_formal %in% c("Grn", "Green") ~ "Grn",
     party == "Other" & first_formal %in% indep ~ "I",
     party == "Other" & first_formal == "Lbt" & state != "NY" ~ "Lbt",
-    year == 2000 & office == "P" & name_snyder == "PHILLIPS, HOWARD" ~ "Other",
     year == 2024 & state == "VT" & name_snyder == "COESTER, MARK" ~ "R",
     .default = party
   )) |>
