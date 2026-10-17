@@ -35,6 +35,7 @@ cand <- cand_raw |>
 
 # Validate before saving the release ----
 check_candidates(cand)
+check_presidents(cand)
 
 # what are the columns -----
 

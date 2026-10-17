@@ -285,11 +285,20 @@ test_that("05 validates before replacing the release", {
   dir.create(file.path(workspace, "release"))
   file.copy(file.path(project_dir, "00e_check-functions.R"), workspace)
 
-  raw <- valid_race |>
+  raw_house <- valid_race |>
     mutate(nextup = 2025, inc = 0, runoff = 0) |>
     rename(vote_g = candidatevotes, w_g = won)
+  raw_presidents <- crossing(
+    year = seq(1992, 2024, by = 4), state = c(state.abb, "DC"), party = c("D", "R")
+  ) |>
+    mutate(
+      office = "P", dist = NA_real_, type = "G", nextup = year + 4,
+      party_formal = party, name_snyder = if_else(party == "D", "SMITH, JANE", "JONES, JOHN"),
+      inc = 0, runoff = NA_real_, vote_g = 50, totalvotes = 100, w_g = NA_real_
+    )
+  raw <- bind_rows(raw_house, raw_presidents)
   bad_raw <- raw |>
-    mutate(party = "INVALID")
+    mutate(party = if_else(office == "H", "INVALID", party))
   input <- file.path(workspace, "data", "intermediate", "candidates_1990-2024.rds")
   output <- file.path(workspace, "release", "candidates_1990-2024.dta")
   write_rds(bad_raw, input)
@@ -299,6 +308,17 @@ test_that("05 validates before replacing the release", {
     expect_error(
       source(file.path(project_dir, "05_release-candidates.R"), local = new.env()),
       class = "cage_validation_error"
+    )
+  })
+  expect_equal(read_lines(output), "Existing release must survive failed validation")
+
+  bad_presidents <- raw |>
+    filter(!(office == "P" & year == 2024 & state == "DC" & party == "R"))
+  write_rds(bad_presidents, input)
+  withr::with_dir(workspace, {
+    expect_error(
+      source(file.path(project_dir, "05_release-candidates.R"), local = new.env()),
+      class = "cage_presidential_validation_error"
     )
   })
   expect_equal(read_lines(output), "Existing release must survive failed validation")
@@ -314,7 +334,18 @@ test_that("05 validates before replacing the release", {
   })
   saved <- haven::read_dta(output) |>
     haven::zap_labels() |>
+    filter(office == "H") |>
     select(all_of(names(valid_race))) |>
     mutate(across(everything(), as.vector))
   expect_equal(saved, valid_race)
+
+  bad_saved_presidents <- haven::read_dta(output) |>
+    filter(!(office == "P" & year == 2024 & state == "DC" & party == "R"))
+  haven::write_dta(bad_saved_presidents, output)
+  withr::with_dir(workspace, {
+    expect_error(
+      source(file.path(project_dir, "07_checks.R"), local = new.env()),
+      class = "cage_presidential_validation_error"
+    )
+  })
 })

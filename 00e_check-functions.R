@@ -9,6 +9,16 @@ scheduled_senate_class <- function(year) {
   )
 }
 
+# Check reports ----
+report_validation_check <- function(rows, label) {
+  if (nrow(rows) == 0) {
+    cli::cli_alert_success("{label}: passed")
+  } else {
+    cli::cli_alert_danger("{label}: failed")
+    print(rows, n = Inf, width = Inf)
+  }
+}
+
 # Candidate validation ----
 # Used by 05 before saving and by 07 to check the saved release.
 check_candidates <- function(cand_raw) {
@@ -184,19 +194,10 @@ check_candidates <- function(cand_raw) {
   )
 
   # Report all findings before stopping ----
-  report_check <- function(rows, label) {
-    if (nrow(rows) == 0) {
-      cli::cli_alert_success("{label}: passed")
-    } else {
-      cli::cli_alert_danger("{label}: failed")
-      print(rows, n = Inf, width = Inf)
-    }
-  }
-
   cli::cli_h2("Enforced checks (presidents excluded)")
-  iwalk(checks, report_check)
+  iwalk(checks, report_validation_check)
   cli::cli_h2("Advisory checks")
-  iwalk(advisory_checks, report_check)
+  iwalk(advisory_checks, report_validation_check)
 
   advisories <- advisory_checks |>
     keep(\(rows) nrow(rows) > 0)
@@ -222,4 +223,69 @@ check_candidates <- function(cand_raw) {
 
   cli::cli_alert_success("All enforced candidate checks passed (presidents excluded).")
   invisible(list(checks = checks, advisories = advisories))
+}
+
+# Presidential validation ----
+check_presidents <- function(cand_raw, years = seq(1992, 2024, by = 4)) {
+  pres <- cand_raw |>
+    haven::zap_labels() |>
+    filter(office == "P")
+
+  major_party <- pres |>
+    filter(party %in% c("D", "R"))
+
+  expected_counts <- crossing(
+    year = years,
+    state = c(state.abb, "DC"),
+    party = c("D", "R")
+  ) |>
+    mutate(expected = 1L)
+
+  observed_counts <- major_party |>
+    count(year, state, party, name = "observed")
+
+  coverage <- expected_counts |>
+    full_join(
+      observed_counts,
+      by = c("year", "state", "party"),
+      relationship = "one-to-one"
+    ) |>
+    filter(is.na(expected) | coalesce(observed, 0L) != expected)
+
+  nominees <- major_party |>
+    summarize(
+      nominees = n_distinct(name_snyder),
+      missing_names = any(is.na(name_snyder) | str_trim(name_snyder) == ""),
+      names = str_c(unique(name_snyder), collapse = "; "),
+      .by = c(year, party)
+    ) |>
+    filter(nominees != 1 | missing_names)
+
+  winner_flags <- pres |>
+    filter(!is.na(won)) |>
+    select(year, state, party, name_snyder, won)
+
+  checks <- list(
+    "D/R presidential coverage in every state and DC" = coverage,
+    "D/R presidential nominees consistent across states" = nominees,
+    "Presidential winner flags all missing" = winner_flags
+  )
+
+  cli::cli_h2("Presidential checks")
+  iwalk(checks, report_validation_check)
+
+  errors <- checks |>
+    keep(\(rows) nrow(rows) > 0)
+  if (length(errors) > 0) {
+    cli::cli_abort(
+      c(
+        "Presidential validation failed.",
+        "x" = "{length(errors)} enforced check{?s} failed; see the rows printed above."
+      ),
+      class = "cage_presidential_validation_error",
+      checks = errors
+    )
+  }
+
+  invisible(list(checks = checks))
 }
