@@ -15,6 +15,10 @@ data/snyder/*.dta
 # custom data
 candidates_key.RData
 
+# Clerk PDF pipeline working files and validation records (local only for now)
+data/clerk/
+
+
 
 # pdf out
 *.pdf
@@ -82,3 +86,5 @@ acs-*.bib
 *.pre
 *.snm
 *.vrb
+# Claude Code skills (local only)
+.claude/

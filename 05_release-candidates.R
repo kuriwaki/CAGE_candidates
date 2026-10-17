@@ -2,6 +2,8 @@ library(tidyverse)
 library(haven)
 library(fs)
 
+source("00e_check-functions.R")
+
 #' function to add labels
 paste_labels <- function(tbl, lab_df = var_labels) {
   stopifnot(all(!duplicated(var_labels$alias)))
@@ -15,7 +17,7 @@ paste_labels <- function(tbl, lab_df = var_labels) {
 
 
 # Read from Output -----
-cand_raw <- read_rds("data/intermediate/candidates_2006-2024.rds")
+cand_raw <- read_rds("data/intermediate/candidates_1990-2024.rds")
 
 
 # remove variables from candidate -----
@@ -30,6 +32,10 @@ cand <- cand_raw |>
   rename(candidatevotes = vote_g,
          won = w_g) |>
   select(!!!order_candvars)
+
+# Validate before saving the release ----
+check_candidates(cand)
+check_presidents(cand)
 
 # what are the columns -----
 
@@ -63,7 +69,7 @@ release_dir <- "release"
 # file_delete(dir_ls(release_dir, regexp = "(csv|dta|rds)$"))
 
 # Save
-write_dta(cand_fmt, path(release_dir, "candidates_2006-2024.dta"))
+write_dta(cand_fmt, path(release_dir, "candidates_1990-2024.dta"))
 
 
 

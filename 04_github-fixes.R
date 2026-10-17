@@ -6,31 +6,43 @@ add_rows_if_new <- function(data, additions, by = c("state", "year", "office", "
   bind_rows(data, anti_join(additions, data, by = by))
 }
 
-jsdat <- readRDS("data/intermediate/candidates_2006-2024-v1.rds")
+jsdat_raw <- read_rds("data/intermediate/candidates_1990-2024-v1.rds")
 
-# GITHUB ISSUES =====
+# GitHub issues ----
 
 
 ## Issues #9-20: House append ----
 
-house_append <- read.csv("data/intermediate/cand_house_append.csv")
+house_append_raw <- read_csv(
+  "data/intermediate/cand_house_append.csv",
+  col_types = cols(dist = col_character(), runoff = col_character()),
+  na = "NA",
+  trim_ws = FALSE,
+  show_col_types = FALSE
+)
+
+# Keep blank state codes for Issue #26; numeric/logical blanks are missing values.
+house_append_typed <- house_append_raw |>
+  mutate(dist = parse_double(dist), runoff = parse_logical(runoff))
 
 # Rename 'name' to 'name_snyder' if needed
-if ("name" %in% names(house_append) && !"name_snyder" %in% names(house_append)) {
-  house_append <- house_append |> rename(name_snyder = name)
+house_append_named <- if ("name" %in% names(house_append_typed) && !"name_snyder" %in% names(house_append_typed)) {
+  house_append_typed |> rename(name_snyder = name)
+} else {
+  house_append_typed
 }
 
 # Remove u_g and vote_g_share columns if they exist
-house_append <- house_append |>
+house_append <- house_append_named |>
   select(-any_of(c("u_g", "vote_g_share")))
 
-jsdat <- add_rows_if_new(jsdat, house_append)
+jsdat_house <- add_rows_if_new(jsdat_raw, house_append)
 
 
 ## Issue #21: Adding Bridenstine ----
 # https://github.com/kuriwaki/cces_candidates/issues/21
 
-jsdat <- add_rows_if_new(jsdat, tibble(
+jsdat <- add_rows_if_new(jsdat_house, tibble(
   state = "OK", year = 2016, office = "H", dist = 1, type = "G", nextup = 2018,
   party = "R", name_snyder = "BRIDENSTINE, JAMES FREDERICK (JIM)", inc = 1,
   w_g = 1, vote_g = NA_real_
@@ -39,44 +51,56 @@ jsdat <- add_rows_if_new(jsdat, tibble(
 
 ## Issue #26: Missing gubernatorial candidate states ----
 
-cand <- jsdat %>%
+cand_state <- jsdat |>
   tidylog::mutate(
-    state = replace(state, state == "" & year == 2011 & office == "G", "LA")
+    state = case_when(
+      state == "" & year == 2011 & office == "G" ~ "LA",
+      .default = state
+    )
   )
 
 
 ## Issue #27: Three last name misspellings ----
 
-cand <- cand %>%
+cand_spelling <- cand_state |>
   tidylog::mutate(
-    name_snyder = replace(name_snyder, str_detect(name_snyder, "YEVANCY"), "YEVANCEY, MANNY"),
-    name_snyder = replace(name_snyder, str_detect(name_snyder, "STANCZACK"), "STANCZAK, JAMES"),
-    name_snyder = replace(name_snyder, str_detect(name_snyder, "WEIDER"), "WIEDER, JOHN")
+    name_snyder = case_when(
+      str_detect(name_snyder, "YEVANCY") ~ "YEVANCEY, MANNY",
+      str_detect(name_snyder, "STANCZACK") ~ "STANCZAK, JAMES",
+      str_detect(name_snyder, "WEIDER") ~ "WIEDER, JOHN",
+      .default = name_snyder
+    )
   )
 
 
 ## Issue #29: Fix Ron Caesar Spelling ----
 
-cand <- cand %>%
+cand_caesar <- cand_spelling |>
   tidylog::mutate(
-    name_snyder = replace(name_snyder, name_snyder == "CEASAR, RON" & state == "LA", "CAESAR, RON")
+    name_snyder = case_when(
+      name_snyder == "CEASAR, RON" & state == "LA" ~ "CAESAR, RON",
+      .default = name_snyder
+    )
   )
 
 
 ## Issue #30: Corrections on incumbency ----
 
-cand <- cand %>%
+cand_incumbency <- cand_caesar |>
   tidylog::mutate(
-    inc = replace(inc, name_snyder == "BREWER, JANICE (JAN)" & state == "AZ" & office == "G" & year == 2010, 1),
-    inc = replace(inc, name_snyder == "MURRAY, JULIANNE E." & state == "DE" & office == "G" & year == 2020, 0)
+    inc = case_when(
+      name_snyder == "BREWER, JANICE (JAN)" & state == "AZ" & office == "G" & year == 2010 ~ 1,
+      name_snyder == "MURRAY, JULIANNE E." & state == "DE" & office == "G" & year == 2020 ~ 0,
+      .default = inc
+    )
   )
 
 
 ## Issue #35: Standardized names ----
 # Issue #43
 
-cand <- cand %>%
-  tidylog::mutate(name_snyder = case_match(
+cand_names <- cand_incumbency |>
+  tidylog::mutate(name_snyder = recode_values(
     name_snyder,
     "BOYDA, NANCY\xcaE." ~ "BOYDA, NANCY E.",
     "KENNEDY, JOSEPH P., III" ~ "KENNEDY, JOSEPH P. (JOE), III",
@@ -88,13 +112,13 @@ cand <- cand %>%
     "SCOTT, JAMES AUSTIN" ~ "SCOTT, AUSTIN",
     "FERGUSON, DREW" ~ "FERGUSON, ANDREW DREW, IV",
     "STEUBE, GREG" ~ "STEUBE, W. GREGORY (GREG)",
-    .default = name_snyder
+    default = name_snyder
   ))
 
 
 ## Issue #41: Missing inc values ----
 
-cand <- cand |>
+cand_missing_inc <- cand_names |>
   left_join(
     tibble::tribble(
       ~state, ~year, ~office,                               ~name_snyder, ~inc,
@@ -117,7 +141,7 @@ cand <- cand |>
 
 
 
-# 2024 ADDITIONS =====
+# 2024 additions ----
 
 # Define 2024 additions
 additions_2024 <- tibble::tribble(
@@ -142,30 +166,30 @@ additions_2024 <- tibble::tribble(
 
 
 
-cand <- add_rows_if_new(cand, additions_2024)
+cand_2024 <- add_rows_if_new(cand_missing_inc, additions_2024)
 
 
-# POST-PROCESSING =====
+# Post-processing ----
 
 ## Fix NA runoffs for GA/LA ----
 # Rows added after the runoff logic don't have runoff set; default them to 0
-cand <- cand |>
+cand_runoff <- cand_2024 |>
   mutate(runoff = if_else(state %in% c("GA", "LA") & is.na(runoff), 0, runoff))
 
 ## Adding won variable for 2024 Governor races ----
 
-cand <- cand |>
+cand_winners <- cand_runoff |>
   mutate(
     w_g = case_when(
       year == 2024 & office == "G" & vote_g == max(vote_g, na.rm = TRUE) ~ 1,
       year == 2024 & office == "G" ~ 0,
-      TRUE ~ w_g
+      .default = w_g
     ),
     .by = c(state, year, office)
   )
 
 # Calculate totalvotes
-cand <- cand |>
+cand_totals <- cand_winners |>
   mutate(
     totalvotes = sum(vote_g, na.rm = TRUE),
     .by = c(state, year, office, dist, type)
@@ -173,9 +197,9 @@ cand <- cand |>
 
 
 ## Reorder the dataset ----
-cand <- cand |>
+cand <- cand_totals |>
   arrange(year, office, state, dist)
 
 ## Write the dataset ----
 
-write_rds(cand, "data/intermediate/candidates_2006-2024.rds")
+write_rds(cand, "data/intermediate/candidates_1990-2024-v2.rds")
