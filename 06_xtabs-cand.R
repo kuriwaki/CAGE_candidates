@@ -17,11 +17,18 @@ jsdat <- read_dta("release/candidates_1990-2024.dta") |>
 js_fct <- jsdat |>
   mutate(party = recode_factor(party, D = "D", R = "R", Lbt = "Lbt", Grn = "Grn", .default = "Oth"))
 
-# counts JS ----
-js_fct |> filter(party %in% c("D", "R"), office != "P") |>  write_numbers("all")
+# Counts ----
+js_fct |> filter(party %in% c("D", "R"), office != "P") |>  write_numbers("all-DR")
 js_fct |> filter(office == "G", party %in% c("D", "R")) |> write_numbers("gov")
 js_fct |> filter(office == "H", party %in% c("D", "R")) |> write_numbers("house")
 js_fct |> filter(office == "S", party %in% c("D", "R")) |> write_numbers("sen")
+
+jsdat |>
+  filter(office != "P") |>
+  distinct(year, state, office, dist, type) |>
+  nrow() |>
+  scales::comma() |>
+  write_lines("guide/Ns/all_races.tex")
 
 # summaries
 write_lines(nrow(jsdat), "guide/Ns/all_rows.tex")
@@ -126,13 +133,13 @@ xtabs(~ year + runoff, jsdat, subset = office == "H") |>
 xtabs(~ year + runoff, jsdat, subset = office == "S") |>
   fmt_xtab("runoff") |> wri_xtab("runoff_S")
 
-# nextup
+# Next election years ----
 xtabs(~ year + nextup, jsdat, subset = office == "G") |>
-  fmt_xtab("nextup") |> wri_xtab("nextup_G")
+  fmt_nextup() |> wri_xtab("nextup_G")
 xtabs(~ year + nextup, jsdat, subset = office == "H") |>
-  fmt_xtab("nextup") |> wri_xtab("nextup_H")
+  fmt_nextup() |> wri_xtab("nextup_H")
 xtabs(~ year + nextup, jsdat, subset = office == "S") |>
-  fmt_xtab("nextup") |> wri_xtab("nextup_S")
+  fmt_nextup() |> wri_xtab("nextup_S")
 
 # won
 xtabs(~ year + won, jsdat, subset = office == "G") |>

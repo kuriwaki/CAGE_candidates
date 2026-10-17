@@ -11,7 +11,7 @@ Jeremiah Cha, Shiro Kuriwaki, and James M. Snyder, Jr.
 
 The goal of cces_candidates is to serve as a standardized interface for U.S. candidate metadata.
 
-Although these data formally only cover 2006 and onwards, the coding rules are written so that they are mostly consistent with a historical database mainly constructed by Jim Snyder.
+Version 4.999 adds 1990–2004 elections, expanding coverage to 1990–2024. The coding rules follow the historical database mainly constructed by Jim Snyder.
 
 See the [Dataverse guide/codebook](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DGDRDT) for a complete guide. The following notes are all included in the guide.
 

@@ -1275,7 +1275,13 @@ votes_2006 <- tribble(
 )
 
 cand <- cand |>
-  rows_update(votes_2006, by = c("year", "state", "office", "dist", "type", "name_snyder"), unmatched = "error")
+  rows_update(votes_2006, by = c("year", "state", "office", "dist", "type", "name_snyder"), unmatched = "error") |>
+  # Healey was lieutenant governor, not governor (MA EOPS, December 2006).
+  # https://archives.lib.state.ma.us/server/api/core/bitstreams/ac3d667e-1a6d-454b-bb79-e745f1fde212/content
+  rows_update(tribble(
+    ~year, ~state, ~office, ~dist, ~type, ~name_snyder, ~inc,
+    2006, "MA", "G", NA_real_, "G", "HEALEY, KERRY MURPHY", 0
+  ), by = c("year", "state", "office", "dist", "type", "name_snyder"), unmatched = "error")
 
 ## Candidates missing from Snyder ----
 # TX-22 also held a special for DeLay's unexpired term on Nov 7

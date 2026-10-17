@@ -109,7 +109,11 @@ pres_fmt <- pres_raw |>
     ),
     name = str_replace(name, "\"{1,}$", ")"),
     name = str_replace(name, "\\s\"{1,}", " ("),
+    # Sitting presidents seeking re-election.
     inc = case_when(
+      year == 1992 & name == "BUSH, GEORGE H.W." ~ 1,
+      year == 1996 & name == "CLINTON, BILL" ~ 1,
+      year == 2004 & name == "BUSH, GEORGE W." ~ 1,
       str_detect(name, "OBAMA") & year == 2012 ~ 1,
       str_detect(name, "TRUMP") & year == 2020 ~ 1,
       .default = 0
