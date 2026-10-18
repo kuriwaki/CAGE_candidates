@@ -3,13 +3,12 @@ library(haven)
 stopifnot(packageVersion("readr") >= "2.0.0")
 
 # read data ----
-jsdat_HSG <- read_dta("data/snyder/2026-01-07 tmp_S_H_G_1990_2024.dta") |>
-  filter(year >= 2006)
+jsdat_HSG <- read_dta("data/snyder/2026-01-07 tmp_S_H_G_1990_2024.dta")
 G_2024 <- read_csv("data/2024/2024-governor-raw.csv", show_col_types = FALSE)
 
 # president
 # 00d_download-MEDSL-president.R
-medsl_P <- read_csv("data/intermediate/2008-2024_pres.csv", show_col_types = FALSE) |>
+medsl_P <- read_csv("data/intermediate/1992-2024_pres.csv", show_col_types = FALSE) |>
   mutate(office = "P", type = "G", nextup = year + 4)
 
 # variable recodings ---
