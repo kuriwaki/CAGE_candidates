@@ -1,3 +1,5 @@
+# Note: Script 04b_audit-corrections.R was written using Claude Opus 5.5. The script mainly makes manual adjustments to the candidate dataset based on audits and corrections from the Clerk of the House and other validated sources. 
+
 library(tidyverse)
 library(tidylog)
 source("00c_party-recode-functions.R")
